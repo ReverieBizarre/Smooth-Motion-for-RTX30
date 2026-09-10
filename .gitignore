@@ -1,0 +1,27 @@
+# Build artifacts
+build/
+*.obj
+*.pdb
+*.lib
+*.exp
+*.ilk
+*.exe
+*.dll
+
+# IDE and editors
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Temp dumps
+demo_out/
+vfi_out/
+logs/
+*.bmp
+*.png
+*.ppm
+
+# Python cache
+__pycache__/
+*.pyc

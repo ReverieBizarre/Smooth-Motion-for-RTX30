@@ -1,0 +1,19 @@
+LIBRARY version
+EXPORTS
+    GetFileVersionInfoA              = C:\Windows\System32\version.dll.GetFileVersionInfoA
+    GetFileVersionInfoByHandle       = C:\Windows\System32\version.dll.GetFileVersionInfoByHandle
+    GetFileVersionInfoExA            = C:\Windows\System32\version.dll.GetFileVersionInfoExA
+    GetFileVersionInfoExW            = C:\Windows\System32\version.dll.GetFileVersionInfoExW
+    GetFileVersionInfoSizeA          = C:\Windows\System32\version.dll.GetFileVersionInfoSizeA
+    GetFileVersionInfoSizeExA        = C:\Windows\System32\version.dll.GetFileVersionInfoSizeExA
+    GetFileVersionInfoSizeExW        = C:\Windows\System32\version.dll.GetFileVersionInfoSizeExW
+    GetFileVersionInfoSizeW          = C:\Windows\System32\version.dll.GetFileVersionInfoSizeW
+    GetFileVersionInfoW              = C:\Windows\System32\version.dll.GetFileVersionInfoW
+    VerFindFileA                     = C:\Windows\System32\version.dll.VerFindFileA
+    VerFindFileW                     = C:\Windows\System32\version.dll.VerFindFileW
+    VerInstallFileA                  = C:\Windows\System32\version.dll.VerInstallFileA
+    VerInstallFileW                  = C:\Windows\System32\version.dll.VerInstallFileW
+    VerLanguageNameA                 = C:\Windows\System32\version.dll.VerLanguageNameA
+    VerLanguageNameW                 = C:\Windows\System32\version.dll.VerLanguageNameW
+    VerQueryValueA                   = C:\Windows\System32\version.dll.VerQueryValueA
+    VerQueryValueW                   = C:\Windows\System32\version.dll.VerQueryValueW
