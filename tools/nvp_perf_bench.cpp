@@ -22,8 +22,8 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "user32.lib")
 
-static const uint32_t RVA_CMP = 0xc41f;
-static const uint32_t RVA_SETGE = 0xc437;
+#include "../src/proxy/pe_scan.h"
+
 static const uint32_t FATBIN_MAGIC = 0xba55ed50;
 
 static bool patchb(uint8_t* p, const uint8_t* pat, size_t n) {
@@ -280,25 +280,43 @@ int main() {
         pfnMemInfo      = (MemInfo_t)GetProcAddress(cu, "cuMemGetInfo_v2");
     }
 
-    HMODULE nv = LoadLibraryA("C:////Windows////System32////DriverStore////FileRepository////nv_dispi.inf_amd64_a3944b54ff18b284////NvPresent64.dll");
-    if (!nv) { printf("[!] LoadLibrary NvPresent64 failed\n"); return 1; }
+    HMODULE nv = sm86::LoadNvPresent();
+    if (!nv) { printf("[!] sm86::LoadNvPresent() failed\n"); return 1; }
 
-    // Gate patch
-    uint8_t* c = (uint8_t*)nv + RVA_CMP;
+    // Gate patch (Dynamic Pattern Scan)
+    uint8_t* c = nullptr;
+    uint8_t* setgePtr = nullptr;
+    uint32_t setgeLen = 0;
+    if (sm86::LocateGateAddresses(nv, &c, &setgePtr, &setgeLen)) {
+        printf("[+] Gate located via Pattern Scan (cmp imm RVA +0x%lx, setge RVA +0x%lx, len %u)\n",
+               (uint32_t)(c - (uint8_t*)nv), (uint32_t)(setgePtr - (uint8_t*)nv), setgeLen);
+    } else {
+        printf("[!] Gate pattern scan failed! Falling back to 0xc41f / 0xc437\n");
+        c = (uint8_t*)nv + 0xc41f;
+        setgePtr = (uint8_t*)nv + 0xc437;
+        setgeLen = 4;
+    }
     uint8_t two = 0x02;
-    uint8_t x[4] = { 0x40, 0xB6, 0x01, 0x90 };
     patchb(c, &two, 1);
-    patchb((uint8_t*)nv + RVA_SETGE, x, 4);
+    if (setgeLen == 4) {
+        uint8_t x[4] = { 0x40, 0xB6, 0x01, 0x90 }; // mov sil, 1; nop
+        patchb(setgePtr, x, 4);
+    } else {
+        uint8_t x[3] = { 0xB6, 0x01, 0x90 }; // mov sil, 1; nop
+        patchb(setgePtr, x, 3);
+    }
 
-    // IAT hooks
+    // IAT hooks (Dynamic PE Import Directory Walker)
     DWORD o = 0;
-    void** iat_load = (void**)((uint8_t*)nv + 0x1d2820);
+    void** iat_load = sm86::FindIATEntry(nv, "nvcuda.dll", "cuModuleLoadData");
+    if (!iat_load) iat_load = (void**)((uint8_t*)nv + 0x1d2820);
     VirtualProtect(iat_load, sizeof(void*), PAGE_READWRITE, &o);
     real_load = (LoadData_t)*iat_load;
     *iat_load = (void*)&hook_load;
     VirtualProtect(iat_load, sizeof(void*), o, &o);
 
-    void** iat_graph = (void**)((uint8_t*)nv + 0x1d2780);
+    void** iat_graph = sm86::FindIATEntry(nv, "nvcuda.dll", "cuGraphLaunch");
+    if (!iat_graph) iat_graph = (void**)((uint8_t*)nv + 0x1d2780);
     VirtualProtect(iat_graph, sizeof(void*), PAGE_READWRITE, &o);
     real_graph_launch = (GraphLaunch_t)*iat_graph;
     *iat_graph = (void*)&hook_graph_launch;
@@ -306,7 +324,8 @@ int main() {
 
     // Global Config Gate
     pfnInitD3D NVP_Init_D3D = (pfnInitD3D)GetProcAddress(nv, "NVP_Init_D3D");
-    uint8_t* S = (uint8_t*)nv + 0x7d7810;
+    uint8_t* S = sm86::ResolveConfigStructFromInit(nv);
+    if (!S) S = (uint8_t*)nv + 0x7d7810;
     S[0x4c] = 1; S[0xe8] = 1; S[0xe9] = 1; S[0x12a5] = 1;
     bool initOk = NVP_Init_D3D ? NVP_Init_D3D() : false;
     S[0x4c] = 1; S[0xe8] = 1; S[0xe9] = 1; S[0x12a5] = 1;

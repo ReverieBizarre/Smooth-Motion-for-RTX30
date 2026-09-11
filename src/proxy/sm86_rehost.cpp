@@ -52,8 +52,8 @@
 #pragma comment(linker, "/export:VerQueryValueA=C:////Windows////System32////version.dll.VerQueryValueA")
 #pragma comment(linker, "/export:VerQueryValueW=C:////Windows////System32////version.dll.VerQueryValueW")
 
-static const uint32_t RVA_GATE_CMP_IMM = 0xc41f;
-static const uint32_t RVA_GATE_SETGE    = 0xc437;
+#include "pe_scan.h"
+
 static const uint32_t FATBIN_MAGIC      = 0xba55ed50;
 
 static HMODULE g_nvpresent = nullptr;
@@ -201,17 +201,42 @@ static void InstallDxgiHooks() {
 static bool ApplyRehost(HMODULE nv) {
     printf("[sm86_rehost] Initializing NvPresent64 rehost @ %p\n", nv);
 
-    // 1. Gate patch
-    uint8_t* cmpImm = (uint8_t*)nv + RVA_GATE_CMP_IMM;
+    // 1. Dynamic Dual-Gate Patch (Pattern Scanner)
+    uint8_t* cmpImm = nullptr;
+    uint8_t* setgePtr = nullptr;
+    uint32_t setgeLen = 0;
+    if (sm86::LocateGateAddresses(nv, &cmpImm, &setgePtr, &setgeLen)) {
+        printf("[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0x%lx, setge RVA +0x%lx, len %u)\n",
+               (uint32_t)(cmpImm - (uint8_t*)nv), (uint32_t)(setgePtr - (uint8_t*)nv), setgeLen);
+    } else {
+        printf("[sm86_rehost] WARNING: Gate pattern scan failed! Trying fallback RVAs (0xc41f, 0xc437)...\n");
+        cmpImm = (uint8_t*)nv + 0xc41f;
+        setgePtr = (uint8_t*)nv + 0xc437;
+        setgeLen = 4;
+    }
+
     uint8_t two = 0x02;
     if (!patch_bytes(cmpImm, &two, 1)) return false;
 
-    static const uint8_t movSil1[] = { 0x40, 0xB6, 0x01, 0x90 }; // mov sil, 1; nop
-    if (!patch_bytes((uint8_t*)nv + RVA_GATE_SETGE, movSil1, 4)) return false;
+    if (setgeLen == 4) {
+        static const uint8_t movSil1[] = { 0x40, 0xB6, 0x01, 0x90 }; // mov sil, 1; nop
+        if (!patch_bytes(setgePtr, movSil1, 4)) return false;
+    } else {
+        static const uint8_t movSil1_3[] = { 0xB6, 0x01, 0x90 }; // mov sil, 1; nop
+        if (!patch_bytes(setgePtr, movSil1_3, 3)) return false;
+    }
     printf("[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced\n");
 
-    // 2. IAT Hook for cuModuleLoadData
-    void** iat_load = (void**)((uint8_t*)nv + 0x1d2820);
+    // 2. Dynamic IAT Hook for cuModuleLoadData (PE Import Directory Walker)
+    void** iat_load = sm86::FindIATEntry(nv, "nvcuda.dll", "cuModuleLoadData");
+    if (iat_load) {
+        printf("[sm86_rehost] IAT cuModuleLoadData found dynamically @ %p (RVA +0x%lx)\n",
+               iat_load, (uint32_t)((uint8_t*)iat_load - (uint8_t*)nv));
+    } else {
+        printf("[sm86_rehost] WARNING: Dynamic IAT walk failed! Trying fallback RVA 0x1d2820...\n");
+        iat_load = (void**)((uint8_t*)nv + 0x1d2820);
+    }
+
     DWORD oldProt = 0;
     if (VirtualProtect(iat_load, sizeof(void*), PAGE_READWRITE, &oldProt)) {
         g_realModuleLoadData = (cuModuleLoadData_t)*iat_load;
@@ -222,8 +247,16 @@ static bool ApplyRehost(HMODULE nv) {
         return false;
     }
 
-    // 3. Global Config Gate & Init
-    uint8_t* S = (uint8_t*)nv + 0x7d7810;
+    // 3. Dynamic Global Config Struct Resolution (RIP-Relative Dissection)
+    uint8_t* S = sm86::ResolveConfigStructFromInit(nv);
+    if (S) {
+        printf("[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ %p (RVA +0x%lx)\n",
+               S, (uint32_t)(S - (uint8_t*)nv));
+    } else {
+        printf("[sm86_rehost] WARNING: Dynamic config resolution failed! Trying fallback RVA 0x7d7810...\n");
+        S = (uint8_t*)nv + 0x7d7810;
+    }
+
     S[0x4c] = 1; S[0xe8] = 1; S[0xe9] = 1; S[0x12a5] = 1;
     pfnInitD3D initD3D = (pfnInitD3D)GetProcAddress(nv, "NVP_Init_D3D");
     if (initD3D) {
@@ -238,14 +271,8 @@ static bool ApplyRehost(HMODULE nv) {
 static DWORD WINAPI StartupThread(LPVOID) {
     Sleep(100); // Brief grace period for game process startup
 
-    // Locate NvPresent64.dll
-    g_nvpresent = GetModuleHandleA("NvPresent64.dll");
-    if (!g_nvpresent) {
-        g_nvpresent = LoadLibraryA("NvPresent64.dll");
-    }
-    if (!g_nvpresent) {
-        g_nvpresent = LoadLibraryA("C:////Windows////System32////DriverStore////FileRepository////nv_dispi.inf_amd64_a3944b54ff18b284////NvPresent64.dll");
-    }
+    // Locate NvPresent64.dll dynamically
+    g_nvpresent = sm86::LoadNvPresent();
 
     if (g_nvpresent) {
         ApplyRehost(g_nvpresent);

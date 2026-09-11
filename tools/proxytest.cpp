@@ -7,8 +7,15 @@
 int main(int argc, char** argv)
 {
     wchar_t dll[MAX_PATH * 2];
-    GetFullPathNameW((argc > 1) ? L"build\\version.dll" : L"build\\version.dll",
-                     MAX_PATH * 2, dll, nullptr);
+    wchar_t argBuf[MAX_PATH];
+    const wchar_t* target = L"build\\Release\\version.dll";
+    if (argc > 1) {
+        MultiByteToWideChar(CP_UTF8, 0, argv[1], -1, argBuf, MAX_PATH);
+        target = argBuf;
+    } else if (GetFileAttributesW(L"build\\Release\\version.dll") == INVALID_FILE_ATTRIBUTES) {
+        target = L"build\\version.dll";
+    }
+    GetFullPathNameW(target, MAX_PATH * 2, dll, nullptr);
 
     HMODULE m = LoadLibraryW(dll);
     if (!m) { printf("LoadLibraryW failed, err %lu\n", GetLastError()); return 1; }

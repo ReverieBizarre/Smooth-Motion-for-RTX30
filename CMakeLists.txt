@@ -42,3 +42,8 @@ set_target_properties(version PROPERTIES PREFIX "")
 
 # ---------------------------------------------------------------- Proxy Verification Test
 add_executable(proxytest tools/proxytest.cpp)
+
+# ---------------------------------------------------------------- PE Pattern Scan Test
+add_executable(test_pe_scan tools/test_pe_scan.cpp)
+target_link_libraries(test_pe_scan PRIVATE user32)
+
