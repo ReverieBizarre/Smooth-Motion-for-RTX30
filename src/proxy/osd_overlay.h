@@ -45,7 +45,7 @@ public:
     bool RenderD3D11(IDXGISwapChain* swap);
 
     // Updates hotkeys (F11/F10/F9) and telemetry
-    void Update(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap);
+    void Update(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap, bool fgActive = true);
 
     // Records the overlay blending onto the target backbuffer (D3D12)
     bool Record(ID3D12GraphicsCommandList* cl,
@@ -62,7 +62,7 @@ public:
 
 private:
     void InitGdi();
-    void RenderGdiSurface(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap);
+    void RenderGdiSurface(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap, bool fgActive);
     bool CreateGpuResources();
 
     ID3D12Device*           m_device        = nullptr;

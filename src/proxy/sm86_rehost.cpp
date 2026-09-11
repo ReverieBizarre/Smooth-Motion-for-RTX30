@@ -195,8 +195,10 @@ static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
         ? "MPC-HC Video (D3D11 DXGI Intercept)"
         : "Road 1 (NvPresent64 Rehost) - FP16 HMMA";
 
+    bool fgActive = g_d3d12Inited && (!g_activatedWrappers.empty());
+
     // Update telemetry and check hotkeys (F11=OSD, F10=UI Mask, F9=Heatmap)
-    g_osd.Update(0.59f, engineTitle, g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap);
+    g_osd.Update(0.59f, engineTitle, g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap, fgActive);
     g_uiMaskCfg.enabled = g_osd.IsUiMaskEnabled();
     g_uiMaskCfg.debugHeatmap = g_osd.IsDebugHeatmap();
 

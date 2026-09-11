@@ -227,7 +227,7 @@ bool OsdOverlay::CreateGpuResources() {
     return true;
 }
 
-void OsdOverlay::Update(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap) {
+void OsdOverlay::Update(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap, bool fgActive) {
     // 1. Hotkey Handling
     if (GetAsyncKeyState(VK_F11) & 1) {
         m_visible = !m_visible;
@@ -257,10 +257,10 @@ void OsdOverlay::Update(float frameGenMs, const char* engineName, bool uiMaskEna
     m_frameCount++;
 
     // 3. Re-render GDI Surface
-    RenderGdiSurface(frameGenMs, engineName, uiMaskEnabled, debugHeatmap);
+    RenderGdiSurface(frameGenMs, engineName, uiMaskEnabled, debugHeatmap, fgActive);
 }
 
-void OsdOverlay::RenderGdiSurface(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap) {
+void OsdOverlay::RenderGdiSurface(float frameGenMs, const char* engineName, bool uiMaskEnabled, bool debugHeatmap, bool fgActive) {
     if (!m_pBits) return;
 
     // Fill background with dark tinted glass
@@ -296,10 +296,16 @@ void OsdOverlay::RenderGdiSurface(float frameGenMs, const char* engineName, bool
     TextOutA(m_memDC, 16, 38, buf, (int)strlen(buf));
 
     // Line 2: FPS & Latency
-    float baseFps = m_currentFps * 0.5f;
-    snprintf(buf, sizeof(buf), "Display: %5.1f FPS (Base: %4.1f) | FG Latency: %4.2f ms",
-             m_currentFps, baseFps, frameGenMs);
-    SetTextColor(m_memDC, RGB(255, 220, 80));
+    if (fgActive) {
+        float baseFps = m_currentFps * 0.5f;
+        snprintf(buf, sizeof(buf), "Display: %5.1f FPS (Base: %4.1f) | FG Latency: %4.2f ms",
+                 m_currentFps, baseFps, frameGenMs);
+        SetTextColor(m_memDC, RGB(255, 220, 80));
+    } else {
+        snprintf(buf, sizeof(buf), "Display: %5.1f FPS (Native) | FG: INACTIVE (D3D12 Only)",
+                 m_currentFps);
+        SetTextColor(m_memDC, RGB(170, 190, 215));
+    }
     TextOutA(m_memDC, 16, 62, buf, (int)strlen(buf));
 
     // Line 3: UI Mask Status
