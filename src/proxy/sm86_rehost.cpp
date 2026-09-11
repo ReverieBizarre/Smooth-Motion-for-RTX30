@@ -53,6 +53,8 @@
 #pragma comment(linker, "/export:VerQueryValueW=C:////Windows////System32////version.dll.VerQueryValueW")
 
 #include "pe_scan.h"
+#include "ui_mask.h"
+#include "osd_overlay.h"
 
 static const uint32_t FATBIN_MAGIC      = 0xba55ed50;
 
@@ -134,13 +136,101 @@ static void ActivateSmoothMotionIfWrapped(IDXGISwapChain* swap) {
     }
 }
 
+static sm86::OsdOverlay        g_osd;
+static sm86::UiMaskEngine      g_uiMask;
+static sm86::UiMaskConfig      g_uiMaskCfg;
+static ID3D12Device*           g_d3d12Dev    = nullptr;
+static ID3D12CommandQueue*     g_cmdQueue    = nullptr;
+static ID3D12CommandAllocator* g_osdAlloc    = nullptr;
+static ID3D12GraphicsCommandList* g_osdCl    = nullptr;
+static bool                    g_d3d12Inited = false;
+
+static void EnsureD3D12Overlay(IDXGISwapChain* swap) {
+    if (g_d3d12Inited || !swap) return;
+
+    IUnknown* devObj = nullptr;
+    if (FAILED(swap->GetDevice(IID_PPV_ARGS(&devObj)))) return;
+
+    ID3D12CommandQueue* q = nullptr;
+    ID3D12Device* dev = nullptr;
+
+    if (SUCCEEDED(devObj->QueryInterface(IID_PPV_ARGS(&q)))) {
+        g_cmdQueue = q;
+        q->GetDevice(IID_PPV_ARGS(&dev));
+        g_d3d12Dev = dev;
+    } else if (SUCCEEDED(devObj->QueryInterface(IID_PPV_ARGS(&dev)))) {
+        g_d3d12Dev = dev;
+    }
+    devObj->Release();
+
+    if (!g_d3d12Dev || !g_cmdQueue) return;
+
+    if (SUCCEEDED(g_d3d12Dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_osdAlloc)))) {
+        if (SUCCEEDED(g_d3d12Dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_osdAlloc, nullptr, IID_PPV_ARGS(&g_osdCl)))) {
+            g_osdCl->Close();
+            g_osd.Initialize(g_d3d12Dev, g_cmdQueue);
+            g_uiMask.Initialize(g_d3d12Dev);
+            g_d3d12Inited = true;
+            printf("[sm86_rehost] D3D12 OSD & UI Mask Protection initialized on swapchain\n");
+        }
+    }
+}
+
+static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
+    if (!swap) return;
+    EnsureD3D12Overlay(swap);
+
+    // Update telemetry and check hotkeys (F11=OSD, F10=UI Mask, F9=Heatmap)
+    g_osd.Update(0.59f, "Road 1 (NvPresent64 Rehost) - FP16 HMMA", g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap);
+    g_uiMaskCfg.enabled = g_osd.IsUiMaskEnabled();
+    g_uiMaskCfg.debugHeatmap = g_osd.IsDebugHeatmap();
+
+    if (!g_d3d12Inited || !g_osd.IsVisible() || !g_cmdQueue) return;
+
+    IDXGISwapChain3* sc3 = nullptr;
+    if (SUCCEEDED(swap->QueryInterface(IID_PPV_ARGS(&sc3)))) {
+        UINT idx = sc3->GetCurrentBackBufferIndex();
+        ID3D12Resource* bb = nullptr;
+        if (SUCCEEDED(swap->GetBuffer(idx, IID_PPV_ARGS(&bb)))) {
+            DXGI_SWAP_CHAIN_DESC desc = {};
+            swap->GetDesc(&desc);
+
+            g_osdAlloc->Reset();
+            g_osdCl->Reset(g_osdAlloc, nullptr);
+
+            D3D12_RESOURCE_BARRIER b = {};
+            b.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            b.Transition.pResource = bb;
+            b.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            b.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+            b.Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+            g_osdCl->ResourceBarrier(1, &b);
+
+            g_osd.Record(g_osdCl, bb, desc.BufferDesc.Width, desc.BufferDesc.Height);
+
+            b.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+            b.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+            g_osdCl->ResourceBarrier(1, &b);
+
+            g_osdCl->Close();
+            ID3D12CommandList* lists[] = { g_osdCl };
+            g_cmdQueue->ExecuteCommandLists(1, lists);
+
+            bb->Release();
+        }
+        sc3->Release();
+    }
+}
+
 static HRESULT STDMETHODCALLTYPE HookedPresent(IDXGISwapChain* swap, UINT sync, UINT flags) {
     ActivateSmoothMotionIfWrapped(swap);
+    ProcessOverlayAndUiMask(swap);
     return g_origPresent(swap, sync, flags);
 }
 
 static HRESULT STDMETHODCALLTYPE HookedPresent1(IDXGISwapChain1* swap, UINT sync, UINT flags, const DXGI_PRESENT_PARAMETERS* p) {
     ActivateSmoothMotionIfWrapped(swap);
+    ProcessOverlayAndUiMask(swap);
     return g_origPresent1(swap, sync, flags, p);
 }
 

@@ -36,9 +36,20 @@ add_executable(nvp_perf_bench tools/nvp_perf_bench.cpp)
 target_link_libraries(nvp_perf_bench PRIVATE d3d12 dxgi user32)
 
 # ---------------------------------------------------------------- Road 1: Proxy DLL (version.dll)
-add_library(version SHARED src/proxy/sm86_rehost.cpp)
-target_link_libraries(version PRIVATE d3d12 d3d11 dxgi user32)
+add_library(version SHARED src/proxy/sm86_rehost.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp)
+target_link_libraries(version PRIVATE d3d12 d3d11 dxgi user32 gdi32 d3dcompiler)
 set_target_properties(version PROPERTIES PREFIX "")
+
+# ---------------------------------------------------------------- UI Mask & OSD Test
+add_executable(test_osd_uimask tools/test_osd_uimask.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp)
+target_link_libraries(test_osd_uimask PRIVATE d3d12 dxgi user32 gdi32 d3dcompiler)
+
+
+# ---------------------------------------------------------------- Road 1 / ReShade: Add-on (sm86_smooth.addon64)
+add_library(sm86_smooth_addon SHARED src/addon/sm86_addon.cpp src/proxy/ui_mask.cpp)
+target_include_directories(sm86_smooth_addon PRIVATE deps/reshade/include deps/imgui src)
+target_link_libraries(sm86_smooth_addon PRIVATE d3d12 dxgi user32 d3dcompiler)
+set_target_properties(sm86_smooth_addon PROPERTIES OUTPUT_NAME "sm86_smooth" SUFFIX ".addon64" PREFIX "")
 
 # ---------------------------------------------------------------- Proxy Verification Test
 add_executable(proxytest tools/proxytest.cpp)
@@ -46,4 +57,9 @@ add_executable(proxytest tools/proxytest.cpp)
 # ---------------------------------------------------------------- PE Pattern Scan Test
 add_executable(test_pe_scan tools/test_pe_scan.cpp)
 target_link_libraries(test_pe_scan PRIVATE user32)
+
+# ---------------------------------------------------------------- ReShade Addon Simulation Test
+add_executable(test_addon_simulation tools/test_addon_simulation.cpp src/proxy/ui_mask.cpp)
+target_include_directories(test_addon_simulation PRIVATE deps/reshade/include deps/imgui src)
+target_link_libraries(test_addon_simulation PRIVATE d3d12 dxgi user32 d3dcompiler)
 
