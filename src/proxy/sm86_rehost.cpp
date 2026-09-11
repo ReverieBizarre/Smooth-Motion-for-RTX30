@@ -144,9 +144,11 @@ static ID3D12CommandQueue*     g_cmdQueue    = nullptr;
 static ID3D12CommandAllocator* g_osdAlloc    = nullptr;
 static ID3D12GraphicsCommandList* g_osdCl    = nullptr;
 static bool                    g_d3d12Inited = false;
+static ID3D11Device*           g_d3d11Dev    = nullptr;
+static bool                    g_d3d11Inited = false;
 
-static void EnsureD3D12Overlay(IDXGISwapChain* swap) {
-    if (g_d3d12Inited || !swap) return;
+static void EnsureOverlay(IDXGISwapChain* swap) {
+    if (g_d3d12Inited || g_d3d11Inited || !swap) return;
 
     IUnknown* devObj = nullptr;
     if (FAILED(swap->GetDevice(IID_PPV_ARGS(&devObj)))) return;
@@ -161,31 +163,51 @@ static void EnsureD3D12Overlay(IDXGISwapChain* swap) {
     } else if (SUCCEEDED(devObj->QueryInterface(IID_PPV_ARGS(&dev)))) {
         g_d3d12Dev = dev;
     }
-    devObj->Release();
 
-    if (!g_d3d12Dev || !g_cmdQueue) return;
-
-    if (SUCCEEDED(g_d3d12Dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_osdAlloc)))) {
-        if (SUCCEEDED(g_d3d12Dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_osdAlloc, nullptr, IID_PPV_ARGS(&g_osdCl)))) {
-            g_osdCl->Close();
-            g_osd.Initialize(g_d3d12Dev, g_cmdQueue);
-            g_uiMask.Initialize(g_d3d12Dev);
-            g_d3d12Inited = true;
-            printf("[sm86_rehost] D3D12 OSD & UI Mask Protection initialized on swapchain\n");
+    if (g_d3d12Dev && g_cmdQueue) {
+        if (SUCCEEDED(g_d3d12Dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&g_osdAlloc)))) {
+            if (SUCCEEDED(g_d3d12Dev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g_osdAlloc, nullptr, IID_PPV_ARGS(&g_osdCl)))) {
+                g_osdCl->Close();
+                g_osd.Initialize(g_d3d12Dev, g_cmdQueue);
+                g_uiMask.Initialize(g_d3d12Dev);
+                g_d3d12Inited = true;
+                printf("[sm86_rehost] D3D12 OSD & UI Mask Protection initialized on swapchain\n");
+            }
+        }
+    } else {
+        ID3D11Device* dev11 = nullptr;
+        if (SUCCEEDED(devObj->QueryInterface(IID_PPV_ARGS(&dev11)))) {
+            g_d3d11Dev = dev11;
+            if (g_osd.InitializeD3D11(g_d3d11Dev)) {
+                g_d3d11Inited = true;
+                printf("[sm86_rehost] D3D11 OSD Overlay initialized on swapchain (e.g. MPC-HC / MPC-VR)\n");
+            }
         }
     }
+    devObj->Release();
 }
 
 static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
     if (!swap) return;
-    EnsureD3D12Overlay(swap);
+    EnsureOverlay(swap);
+
+    const char* engineTitle = g_d3d11Inited
+        ? "MPC-HC Video (D3D11 DXGI Intercept)"
+        : "Road 1 (NvPresent64 Rehost) - FP16 HMMA";
 
     // Update telemetry and check hotkeys (F11=OSD, F10=UI Mask, F9=Heatmap)
-    g_osd.Update(0.59f, "Road 1 (NvPresent64 Rehost) - FP16 HMMA", g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap);
+    g_osd.Update(0.59f, engineTitle, g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap);
     g_uiMaskCfg.enabled = g_osd.IsUiMaskEnabled();
     g_uiMaskCfg.debugHeatmap = g_osd.IsDebugHeatmap();
 
-    if (!g_d3d12Inited || !g_osd.IsVisible() || !g_cmdQueue) return;
+    if (!g_osd.IsVisible()) return;
+
+    if (g_d3d11Inited) {
+        g_osd.RenderD3D11(swap);
+        return;
+    }
+
+    if (!g_d3d12Inited || !g_cmdQueue) return;
 
     IDXGISwapChain3* sc3 = nullptr;
     if (SUCCEEDED(swap->QueryInterface(IID_PPV_ARGS(&sc3)))) {

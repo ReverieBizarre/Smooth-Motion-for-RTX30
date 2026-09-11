@@ -60,6 +60,7 @@ OsdOverlay::OsdOverlay() {
 
 OsdOverlay::~OsdOverlay() {
     Shutdown();
+    ShutdownD3D11();
 }
 
 bool OsdOverlay::Initialize(ID3D12Device* device, ID3D12CommandQueue* queue) {
@@ -90,6 +91,8 @@ void OsdOverlay::Shutdown() {
     if (m_hBitmap)    { DeleteObject(m_hBitmap); m_hBitmap = nullptr; }
     if (m_hFontTitle) { DeleteObject(m_hFontTitle); m_hFontTitle = nullptr; }
     if (m_hFontText)  { DeleteObject(m_hFontText); m_hFontText = nullptr; }
+
+    ShutdownD3D11();
 
     m_device = nullptr;
     m_initialized = false;
@@ -404,6 +407,298 @@ bool OsdOverlay::Record(ID3D12GraphicsCommandList* cl,
     cl->SetComputeRootDescriptorTable(2, gpuHandle); // u0
 
     cl->Dispatch((OSD_WIDTH + 15) / 16, (OSD_HEIGHT + 15) / 16, 1);
+    return true;
+}
+
+// ----------------------------------------------------------------------------
+//  Direct3D 11 Backend Implementation (MPC-HC, MPC-VR, D3D11 Games)
+// ----------------------------------------------------------------------------
+
+bool OsdOverlay::InitializeD3D11(ID3D11Device* device) {
+    if (!device) return false;
+    ShutdownD3D11();
+
+    m_device11 = device;
+    m_device11->GetImmediateContext(&m_context11);
+
+    InitGdi();
+
+    // 1. Create Overlay Texture (540x150 BGRA)
+    D3D11_TEXTURE2D_DESC td = {};
+    td.Width = OSD_WIDTH;
+    td.Height = OSD_HEIGHT;
+    td.MipLevels = 1;
+    td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_DEFAULT;
+    td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    HRESULT hr = m_device11->CreateTexture2D(&td, nullptr, &m_overlayTex11);
+    if (FAILED(hr)) return false;
+
+    // 2. Create Shader Resource View
+    hr = m_device11->CreateShaderResourceView(m_overlayTex11, nullptr, &m_overlaySRV11);
+    if (FAILED(hr)) return false;
+
+    // 3. Constant Buffer for Screen & OSD dimensions
+    struct OsdCB {
+        float ScreenW;
+        float ScreenH;
+        float OsdW;
+        float OsdH;
+        float MasterAlpha;
+        float Pad[3];
+    };
+    D3D11_BUFFER_DESC bd = {};
+    bd.ByteWidth = sizeof(OsdCB);
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    hr = m_device11->CreateBuffer(&bd, nullptr, &m_cb11);
+    if (FAILED(hr)) return false;
+
+    // 4. Compile Vertex Shader (Full-screen triangle)
+    static const char* vsSrc = R"(
+        struct VSOut { float4 pos : SV_Position; float2 uv : TEXCOORD0; };
+        VSOut VSMain(uint id : SV_VertexID) {
+            VSOut o;
+            o.uv = float2((id << 1) & 2, id & 2);
+            o.pos = float4(o.uv * float2(2.0f, -2.0f) + float2(-1.0f, 1.0f), 0.0f, 1.0f);
+            return o;
+        }
+    )";
+    ID3DBlob* vsBlob = nullptr;
+    ID3DBlob* errBlob = nullptr;
+    hr = D3DCompile(vsSrc, strlen(vsSrc), nullptr, nullptr, nullptr, "VSMain", "vs_4_0", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &vsBlob, &errBlob);
+    if (FAILED(hr)) {
+        if (errBlob) errBlob->Release();
+        return false;
+    }
+    hr = m_device11->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &m_vs11);
+    vsBlob->Release();
+    if (FAILED(hr)) return false;
+
+    // 5. Compile Pixel Shader (Alpha-blended corner box)
+    static const char* psSrc = R"(
+        Texture2D t_overlay : register(t0);
+        SamplerState s_linear : register(s0);
+        cbuffer Params : register(b0) {
+            float ScreenW; float ScreenH; float OsdW; float OsdH;
+            float MasterAlpha; float3 Pad;
+        };
+        struct VSOut { float4 pos : SV_Position; float2 uv : TEXCOORD0; };
+        float4 PSMain(VSOut i) : SV_Target {
+            float2 pixelPos = i.uv * float2(ScreenW, ScreenH);
+            float startX = max(0.0f, ScreenW - OsdW - 24.0f);
+            float startY = 24.0f;
+            if (pixelPos.x >= startX && pixelPos.x < startX + OsdW &&
+                pixelPos.y >= startY && pixelPos.y < startY + OsdH) {
+                float2 uv = (pixelPos - float2(startX, startY)) / float2(OsdW, OsdH);
+                float4 col = t_overlay.Sample(s_linear, uv);
+                return float4(col.rgb, col.a * MasterAlpha);
+            }
+            discard;
+            return float4(0, 0, 0, 0);
+        }
+    )";
+    ID3DBlob* psBlob = nullptr;
+    hr = D3DCompile(psSrc, strlen(psSrc), nullptr, nullptr, nullptr, "PSMain", "ps_4_0", D3DCOMPILE_OPTIMIZATION_LEVEL3, 0, &psBlob, &errBlob);
+    if (FAILED(hr)) {
+        if (errBlob) errBlob->Release();
+        return false;
+    }
+    hr = m_device11->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &m_ps11);
+    psBlob->Release();
+    if (FAILED(hr)) return false;
+
+    // 6. Blend State (Alpha blending: SrcAlpha / InvSrcAlpha)
+    D3D11_BLEND_DESC bDesc = {};
+    bDesc.RenderTarget[0].BlendEnable = TRUE;
+    bDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    bDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    bDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    bDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    bDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    bDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    bDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    hr = m_device11->CreateBlendState(&bDesc, &m_blendState11);
+    if (FAILED(hr)) return false;
+
+    // 7. Depth Stencil State (Depth disabled)
+    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+    dsDesc.DepthEnable = FALSE;
+    dsDesc.StencilEnable = FALSE;
+    hr = m_device11->CreateDepthStencilState(&dsDesc, &m_dsState11);
+    if (FAILED(hr)) return false;
+
+    // 8. Rasterizer State (No culling)
+    D3D11_RASTERIZER_DESC rDesc = {};
+    rDesc.FillMode = D3D11_FILL_SOLID;
+    rDesc.CullMode = D3D11_CULL_NONE;
+    rDesc.DepthClipEnable = FALSE;
+    hr = m_device11->CreateRasterizerState(&rDesc, &m_rsState11);
+    if (FAILED(hr)) return false;
+
+    // 9. Sampler State (Linear Clamp)
+    D3D11_SAMPLER_DESC sDesc = {};
+    sDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    sDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    hr = m_device11->CreateSamplerState(&sDesc, &m_sampler11);
+    if (FAILED(hr)) return false;
+
+    m_initialized11 = true;
+    return true;
+}
+
+void OsdOverlay::ShutdownD3D11() {
+    if (m_sampler11)    { m_sampler11->Release(); m_sampler11 = nullptr; }
+    if (m_rsState11)    { m_rsState11->Release(); m_rsState11 = nullptr; }
+    if (m_dsState11)    { m_dsState11->Release(); m_dsState11 = nullptr; }
+    if (m_blendState11) { m_blendState11->Release(); m_blendState11 = nullptr; }
+    if (m_ps11)         { m_ps11->Release(); m_ps11 = nullptr; }
+    if (m_vs11)         { m_vs11->Release(); m_vs11 = nullptr; }
+    if (m_cb11)         { m_cb11->Release(); m_cb11 = nullptr; }
+    if (m_overlaySRV11) { m_overlaySRV11->Release(); m_overlaySRV11 = nullptr; }
+    if (m_overlayTex11) { m_overlayTex11->Release(); m_overlayTex11 = nullptr; }
+    if (m_context11)    { m_context11->Release(); m_context11 = nullptr; }
+    m_device11 = nullptr;
+    m_initialized11 = false;
+}
+
+bool OsdOverlay::RenderD3D11(IDXGISwapChain* swap) {
+    if (!m_initialized11 || !m_visible || !swap || !m_context11)
+        return false;
+
+    // 1. Get backbuffer texture from swapchain
+    ID3D11Texture2D* backbuffer = nullptr;
+    if (FAILED(swap->GetBuffer(0, IID_PPV_ARGS(&backbuffer))))
+        return false;
+
+    D3D11_TEXTURE2D_DESC bbDesc = {};
+    backbuffer->GetDesc(&bbDesc);
+
+    ID3D11RenderTargetView* rtv = nullptr;
+    HRESULT hr = m_device11->CreateRenderTargetView(backbuffer, nullptr, &rtv);
+    if (FAILED(hr)) {
+        backbuffer->Release();
+        return false;
+    }
+
+    // 2. Upload GDI DIB bits to texture
+    m_context11->UpdateSubresource(m_overlayTex11, 0, nullptr, m_pBits, OSD_WIDTH * 4, 0);
+
+    // 3. Update Constant Buffer
+    struct OsdCB {
+        float ScreenW;
+        float ScreenH;
+        float OsdW;
+        float OsdH;
+        float MasterAlpha;
+        float Pad[3];
+    } cb = {
+        (float)bbDesc.Width, (float)bbDesc.Height,
+        (float)OSD_WIDTH, (float)OSD_HEIGHT,
+        0.95f, {0, 0, 0}
+    };
+    m_context11->UpdateSubresource(m_cb11, 0, nullptr, &cb, 0, 0);
+
+    // 4. Backup complete D3D11 Context state
+    ID3D11RenderTargetView* oldRTV = nullptr;
+    ID3D11DepthStencilView* oldDSV = nullptr;
+    m_context11->OMGetRenderTargets(1, &oldRTV, &oldDSV);
+
+    D3D11_VIEWPORT oldVp[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    UINT numVp = D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+    m_context11->RSGetViewports(&numVp, oldVp);
+
+    ID3D11BlendState* oldBlend = nullptr;
+    FLOAT oldBlendFactor[4];
+    UINT oldSampleMask = 0;
+    m_context11->OMGetBlendState(&oldBlend, oldBlendFactor, &oldSampleMask);
+
+    ID3D11DepthStencilState* oldDSS = nullptr;
+    UINT oldStencilRef = 0;
+    m_context11->OMGetDepthStencilState(&oldDSS, &oldStencilRef);
+
+    ID3D11RasterizerState* oldRS = nullptr;
+    m_context11->RSGetState(&oldRS);
+
+    ID3D11VertexShader* oldVS = nullptr;
+    ID3D11PixelShader* oldPS = nullptr;
+    m_context11->VSGetShader(&oldVS, nullptr, nullptr);
+    m_context11->PSGetShader(&oldPS, nullptr, nullptr);
+
+    ID3D11ShaderResourceView* oldSRV = nullptr;
+    m_context11->PSGetShaderResources(0, 1, &oldSRV);
+
+    ID3D11SamplerState* oldSampler = nullptr;
+    m_context11->PSGetSamplers(0, 1, &oldSampler);
+
+    ID3D11Buffer* oldCB = nullptr;
+    m_context11->PSGetConstantBuffers(0, 1, &oldCB);
+
+    D3D11_PRIMITIVE_TOPOLOGY oldTopology;
+    m_context11->IAGetPrimitiveTopology(&oldTopology);
+
+    ID3D11InputLayout* oldIL = nullptr;
+    m_context11->IAGetInputLayout(&oldIL);
+
+    // 5. Set our pipeline states
+    D3D11_VIEWPORT vp = {};
+    vp.Width = (FLOAT)bbDesc.Width;
+    vp.Height = (FLOAT)bbDesc.Height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    m_context11->RSSetViewports(1, &vp);
+
+    m_context11->OMSetRenderTargets(1, &rtv, nullptr);
+    const FLOAT blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    m_context11->OMSetBlendState(m_blendState11, blendFactor, 0xFFFFFFFF);
+    m_context11->OMSetDepthStencilState(m_dsState11, 0);
+    m_context11->RSSetState(m_rsState11);
+
+    m_context11->IASetInputLayout(nullptr);
+    m_context11->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_context11->VSSetShader(m_vs11, nullptr, 0);
+    m_context11->PSSetShader(m_ps11, nullptr, 0);
+    m_context11->PSSetConstantBuffers(0, 1, &m_cb11);
+    m_context11->PSSetShaderResources(0, 1, &m_overlaySRV11);
+    m_context11->PSSetSamplers(0, 1, &m_sampler11);
+
+    // 6. Draw full-screen triangle (3 vertices)
+    m_context11->Draw(3, 0);
+
+    // 7. Restore saved state
+    m_context11->OMSetRenderTargets(1, &oldRTV, oldDSV);
+    m_context11->RSSetViewports(numVp, oldVp);
+    m_context11->OMSetBlendState(oldBlend, oldBlendFactor, oldSampleMask);
+    m_context11->OMSetDepthStencilState(oldDSS, oldStencilRef);
+    m_context11->RSSetState(oldRS);
+    m_context11->IASetInputLayout(oldIL);
+    m_context11->IASetPrimitiveTopology(oldTopology);
+    m_context11->VSSetShader(oldVS, nullptr, 0);
+    m_context11->PSSetShader(oldPS, nullptr, 0);
+    m_context11->PSSetShaderResources(0, 1, &oldSRV);
+    m_context11->PSSetSamplers(0, 1, &oldSampler);
+    m_context11->PSSetConstantBuffers(0, 1, &oldCB);
+
+    // Release temporary refs
+    if (oldRTV) oldRTV->Release();
+    if (oldDSV) oldDSV->Release();
+    if (oldBlend) oldBlend->Release();
+    if (oldDSS) oldDSS->Release();
+    if (oldRS) oldRS->Release();
+    if (oldVS) oldVS->Release();
+    if (oldPS) oldPS->Release();
+    if (oldSRV) oldSRV->Release();
+    if (oldSampler) oldSampler->Release();
+    if (oldCB) oldCB->Release();
+    if (oldIL) oldIL->Release();
+
+    rtv->Release();
+    backbuffer->Release();
     return true;
 }
 

@@ -42,7 +42,10 @@ set_target_properties(version PROPERTIES PREFIX "")
 
 # ---------------------------------------------------------------- UI Mask & OSD Test
 add_executable(test_osd_uimask tools/test_osd_uimask.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp)
-target_link_libraries(test_osd_uimask PRIVATE d3d12 dxgi user32 gdi32 d3dcompiler)
+target_link_libraries(test_osd_uimask PRIVATE d3d12 d3d11 dxgi user32 gdi32 d3dcompiler)
+
+add_executable(test_d3d11_osd tools/test_d3d11_osd.cpp src/proxy/osd_overlay.cpp)
+target_link_libraries(test_d3d11_osd PRIVATE d3d11 d3d12 dxgi user32 gdi32 d3dcompiler)
 
 
 # ---------------------------------------------------------------- Road 1 / ReShade: Add-on (sm86_smooth.addon64)
