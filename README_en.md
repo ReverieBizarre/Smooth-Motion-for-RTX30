@@ -2,6 +2,7 @@
 
 [简体中文](README.md) | [English](README_en.md)
 
+[![GitHub Release](https://img.shields.io/github/v/release/ReverieBizarre/Smooth-Motion-for-RTX30?style=flat-square&color=blue)](https://github.com/ReverieBizarre/Smooth-Motion-for-RTX30/releases/latest)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat-square)](#building--compiling)
 [![Platform](https://img.shields.io/badge/platform-Windows%20x64-blue.svg?style=flat-square)](#prerequisites)
 [![Architecture](https://img.shields.io/badge/target-NVIDIA%20Ampere%20(SM86)-76b900.svg?style=flat-square)](#key-reverse-engineering-breakthroughs-road-1)
