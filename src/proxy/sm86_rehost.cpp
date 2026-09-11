@@ -196,15 +196,67 @@ static void EnsureOverlay(IDXGISwapChain* swap) {
     devObj->Release();
 }
 
+static void LogBridge(const char* fmt, ...) {
+    char buf[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+    OutputDebugStringA(buf);
+    FILE* f = fopen("C:\\Users\\lsp\\Documents\\antigravity\\calm-carson\\sm86_debug.log", "a");
+    if (f) {
+        fputs(buf, f);
+        fclose(f);
+    }
+}
+
 static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
     if (!swap) return;
     EnsureOverlay(swap);
 
     DXGI_SWAP_CHAIN_DESC sd = {};
     swap->GetDesc(&sd);
-    if (g_d3d11Dev && sd.BufferDesc.Width >= 480 && sd.BufferDesc.Height >= 480) {
-        if (!g_bridge.IsActive() || g_bridge.GetWidth() != sd.BufferDesc.Width || g_bridge.GetHeight() != sd.BufferDesc.Height) {
-            g_bridge.Initialize(g_d3d11Dev, sd.OutputWindow, sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
+
+    HWND hwnd = sd.OutputWindow;
+    if (!hwnd) {
+        IDXGISwapChain1* sc1 = nullptr;
+        if (SUCCEEDED(swap->QueryInterface(IID_PPV_ARGS(&sc1)))) {
+            sc1->GetHwnd(&hwnd);
+            sc1->Release();
+        }
+    }
+    if (!hwnd) {
+        hwnd = GetActiveWindow();
+        if (!hwnd) hwnd = GetForegroundWindow();
+    }
+
+    uint32_t width = sd.BufferDesc.Width;
+    uint32_t height = sd.BufferDesc.Height;
+    DXGI_FORMAT format = sd.BufferDesc.Format;
+
+    if (g_d3d11Dev) {
+        ID3D11Texture2D* bb = nullptr;
+        if (SUCCEEDED(swap->GetBuffer(0, IID_PPV_ARGS(&bb)))) {
+            D3D11_TEXTURE2D_DESC bbDesc = {};
+            bb->GetDesc(&bbDesc);
+            width = bbDesc.Width;
+            height = bbDesc.Height;
+            format = bbDesc.Format;
+            bb->Release();
+        }
+
+        if (width >= 480 && height >= 480 && hwnd) {
+            if (!g_bridge.IsActive() || g_bridge.GetWidth() != width || g_bridge.GetHeight() != height) {
+                LogBridge("[sm86_rehost] Triggering Bridge Init: hwnd=%p, res=%ux%u, fmt=%d\n",
+                          hwnd, width, height, (int)format);
+                g_bridge.Initialize(g_d3d11Dev, hwnd, width, height, format);
+            }
+        } else {
+            static int s_skipCount = 0;
+            if (s_skipCount++ % 60 == 0) {
+                LogBridge("[sm86_rehost] Skipping Bridge Init: hwnd=%p, res=%ux%u (need >=480), dev11=%p\n",
+                          hwnd, width, height, g_d3d11Dev);
+            }
         }
     }
 

@@ -4,6 +4,21 @@
 // ============================================================================
 #include "d3d11_to_d3d12_bridge.h"
 #include <cstdio>
+#include <cstdarg>
+
+static void LogBridge(const char* fmt, ...) {
+    char buf[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+    OutputDebugStringA(buf);
+    FILE* f = fopen("C:\\Users\\lsp\\Documents\\antigravity\\calm-carson\\sm86_debug.log", "a");
+    if (f) {
+        fputs(buf, f);
+        fclose(f);
+    }
+}
 
 namespace sm86 {
 
@@ -82,24 +97,29 @@ bool D3D11ToD3D12Bridge::CreateSharedTexture(uint32_t width, uint32_t height, DX
 
     hr = m_dev12->OpenSharedHandle(m_sharedHandle, IID_PPV_ARGS(&m_sharedTex12));
     if (FAILED(hr)) {
-        printf("[D3D11ToD3D12Bridge] Failed to open shared handle in D3D12: 0x%08X\n", (uint32_t)hr);
+        LogBridge("[D3D11ToD3D12Bridge] Failed to open shared handle in D3D12: 0x%08X\n", (uint32_t)hr);
         return false;
     }
 
+    LogBridge("[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=%p, tex12=%p)\n",
+              m_sharedTex11, m_sharedTex12);
     return true;
 }
 
 bool D3D11ToD3D12Bridge::CreateD3D12Resources(HWND hwnd, uint32_t width, uint32_t height, DXGI_FORMAT format) {
     HRESULT hr = D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&m_dev12));
     if (FAILED(hr)) {
-        printf("[D3D11ToD3D12Bridge] D3D12CreateDevice failed: 0x%08X\n", (uint32_t)hr);
+        LogBridge("[D3D11ToD3D12Bridge] D3D12CreateDevice failed: 0x%08X\n", (uint32_t)hr);
         return false;
     }
 
     D3D12_COMMAND_QUEUE_DESC qd = {};
     qd.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     hr = m_dev12->CreateCommandQueue(&qd, IID_PPV_ARGS(&m_cq12));
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) {
+        LogBridge("[D3D11ToD3D12Bridge] CreateCommandQueue failed: 0x%08X\n", (uint32_t)hr);
+        return false;
+    }
 
     hr = m_dev12->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_alloc12));
     if (FAILED(hr)) return false;
@@ -111,7 +131,10 @@ bool D3D11ToD3D12Bridge::CreateD3D12Resources(HWND hwnd, uint32_t width, uint32_
     // Create D3D12 SwapChain on hwnd
     IDXGIFactory4* f = nullptr;
     CreateDXGIFactory1(IID_PPV_ARGS(&f));
-    if (!f) return false;
+    if (!f) {
+        LogBridge("[D3D11ToD3D12Bridge] CreateDXGIFactory1 failed\n");
+        return false;
+    }
 
     DXGI_FORMAT swapFormat = (format == DXGI_FORMAT_B8G8R8A8_UNORM) 
                            ? DXGI_FORMAT_B8G8R8A8_UNORM 
@@ -129,7 +152,7 @@ bool D3D11ToD3D12Bridge::CreateD3D12Resources(HWND hwnd, uint32_t width, uint32_
     hr = f->CreateSwapChainForHwnd(m_cq12, hwnd, &sd, nullptr, nullptr, &m_swap12);
     f->Release();
     if (FAILED(hr) || !m_swap12) {
-        printf("[D3D11ToD3D12Bridge] CreateSwapChainForHwnd failed: 0x%08X\n", (uint32_t)hr);
+        LogBridge("[D3D11ToD3D12Bridge] CreateSwapChainForHwnd failed on HWND %p: 0x%08X\n", hwnd, (uint32_t)hr);
         return false;
     }
 
@@ -140,10 +163,10 @@ bool D3D11ToD3D12Bridge::CreateD3D12Resources(HWND hwnd, uint32_t width, uint32_
         typedef void (*pfnSetByte)(void*, uint8_t);
         ((pfnSetByte)vt[19])(m_wrapper, 1);
         ((pfnSetByte)vt[20])(m_wrapper, 1);
-        printf("[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ %p (wrapper @ %p) <<<\n",
-               m_swap12, m_wrapper);
+        LogBridge("[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ %p (wrapper @ %p) <<<\n",
+                  m_swap12, m_wrapper);
     } else {
-        printf("[D3D11ToD3D12Bridge] Warning: NvPresent64 wrapper not found on shadow swapchain\n");
+        LogBridge("[D3D11ToD3D12Bridge] Warning: NvPresent64 wrapper not found on shadow swapchain\n");
     }
 
     m_swap12->QueryInterface(IID_PPV_ARGS(&m_swap3_12));
@@ -159,10 +182,16 @@ bool D3D11ToD3D12Bridge::CreateD3D12Resources(HWND hwnd, uint32_t width, uint32_
 }
 
 bool D3D11ToD3D12Bridge::Initialize(ID3D11Device* dev11, HWND hwnd, uint32_t width, uint32_t height, DXGI_FORMAT format) {
-    if (!dev11 || !hwnd) return false;
+    LogBridge("[D3D11ToD3D12Bridge::Initialize] dev11=%p, hwnd=%p, res=%ux%u, fmt=%d\n",
+              dev11, hwnd, width, height, (int)format);
+
+    if (!dev11 || !hwnd) {
+        LogBridge("[D3D11ToD3D12Bridge::Initialize] FAILED: dev11 or hwnd is NULL\n");
+        return false;
+    }
     // NvPresent64 resolution guard: Width >= 480 and Height >= 480
     if (width < 480 || height < 480) {
-        printf("[D3D11ToD3D12Bridge] Resolution %ux%u below NvPresent 480p threshold, passthrough.\n", width, height);
+        LogBridge("[D3D11ToD3D12Bridge] Resolution %ux%u below NvPresent 480p threshold, passthrough.\n", width, height);
         return false;
     }
 
@@ -180,18 +209,20 @@ bool D3D11ToD3D12Bridge::Initialize(ID3D11Device* dev11, HWND hwnd, uint32_t wid
     m_format = format;
 
     if (!CreateD3D12Resources(hwnd, width, height, format)) {
+        LogBridge("[D3D11ToD3D12Bridge::Initialize] CreateD3D12Resources FAILED\n");
         Shutdown();
         return false;
     }
 
     if (!CreateSharedTexture(width, height, format)) {
+        LogBridge("[D3D11ToD3D12Bridge::Initialize] CreateSharedTexture FAILED\n");
         Shutdown();
         return false;
     }
 
     m_active = true;
-    printf("[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge initialized for %ux%u (HWND %p)\n",
-           width, height, hwnd);
+    LogBridge("[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for %ux%u (HWND %p, Wrapper %p)\n",
+              width, height, hwnd, m_wrapper);
     return true;
 }
 
