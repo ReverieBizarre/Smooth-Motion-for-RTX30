@@ -36,7 +36,7 @@ add_executable(nvp_perf_bench tools/nvp_perf_bench.cpp)
 target_link_libraries(nvp_perf_bench PRIVATE d3d12 dxgi user32)
 
 # ---------------------------------------------------------------- Road 1: Proxy DLL (version.dll)
-add_library(version SHARED src/proxy/sm86_rehost.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp)
+add_library(version SHARED src/proxy/sm86_rehost.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp src/proxy/d3d11_to_d3d12_bridge.cpp)
 target_link_libraries(version PRIVATE d3d12 d3d11 dxgi user32 gdi32 d3dcompiler)
 set_target_properties(version PROPERTIES PREFIX "")
 
@@ -46,6 +46,10 @@ target_link_libraries(test_osd_uimask PRIVATE d3d12 d3d11 dxgi user32 gdi32 d3dc
 
 add_executable(test_d3d11_osd tools/test_d3d11_osd.cpp src/proxy/osd_overlay.cpp)
 target_link_libraries(test_d3d11_osd PRIVATE d3d11 d3d12 dxgi user32 gdi32 d3dcompiler)
+
+# ---------------------------------------------------------------- D3D11 to D3D12 Bridge Test
+add_executable(test_d3d11_bridge_nvp tools/test_d3d11_bridge_nvp.cpp src/proxy/d3d11_to_d3d12_bridge.cpp)
+target_link_libraries(test_d3d11_bridge_nvp PRIVATE d3d11 d3d12 dxgi user32)
 
 
 # ---------------------------------------------------------------- Road 1 / ReShade: Add-on (sm86_smooth.addon64)

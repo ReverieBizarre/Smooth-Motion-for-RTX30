@@ -55,6 +55,7 @@
 #include "pe_scan.h"
 #include "ui_mask.h"
 #include "osd_overlay.h"
+#include "d3d11_to_d3d12_bridge.h"
 
 static const uint32_t FATBIN_MAGIC      = 0xba55ed50;
 
@@ -146,6 +147,7 @@ static ID3D12GraphicsCommandList* g_osdCl    = nullptr;
 static bool                    g_d3d12Inited = false;
 static ID3D11Device*           g_d3d11Dev    = nullptr;
 static bool                    g_d3d11Inited = false;
+static sm86::D3D11ToD3D12Bridge g_bridge;
 
 static void EnsureOverlay(IDXGISwapChain* swap) {
     if (g_d3d12Inited || g_d3d11Inited || !swap) return;
@@ -178,6 +180,13 @@ static void EnsureOverlay(IDXGISwapChain* swap) {
         ID3D11Device* dev11 = nullptr;
         if (SUCCEEDED(devObj->QueryInterface(IID_PPV_ARGS(&dev11)))) {
             g_d3d11Dev = dev11;
+            DXGI_SWAP_CHAIN_DESC sd = {};
+            swap->GetDesc(&sd);
+            if (sd.BufferDesc.Width >= 480 && sd.BufferDesc.Height >= 480) {
+                if (g_bridge.Initialize(g_d3d11Dev, sd.OutputWindow, sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format)) {
+                    printf("[sm86_rehost] >>> Shadow D3D12 Bridge engaged: Road 1 NvPresent64 activated for D3D11! <<<\n");
+                }
+            }
             if (g_osd.InitializeD3D11(g_d3d11Dev)) {
                 g_d3d11Inited = true;
                 printf("[sm86_rehost] D3D11 OSD Overlay initialized on swapchain (e.g. MPC-HC / MPC-VR)\n");
@@ -191,14 +200,23 @@ static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
     if (!swap) return;
     EnsureOverlay(swap);
 
-    const char* engineTitle = g_d3d11Inited
-        ? "MPC-HC Video (D3D11 DXGI Intercept)"
-        : "Road 1 (NvPresent64 Rehost) - FP16 HMMA";
+    DXGI_SWAP_CHAIN_DESC sd = {};
+    swap->GetDesc(&sd);
+    if (g_d3d11Dev && sd.BufferDesc.Width >= 480 && sd.BufferDesc.Height >= 480) {
+        if (!g_bridge.IsActive() || g_bridge.GetWidth() != sd.BufferDesc.Width || g_bridge.GetHeight() != sd.BufferDesc.Height) {
+            g_bridge.Initialize(g_d3d11Dev, sd.OutputWindow, sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
+        }
+    }
 
-    bool fgActive = g_d3d12Inited && (!g_activatedWrappers.empty());
+    bool bridgeActive = g_bridge.IsActive();
+    bool fgActive = (g_d3d12Inited && (!g_activatedWrappers.empty())) || bridgeActive;
+
+    const char* engineTitle = bridgeActive
+        ? "Road 1 (NvPresent64 D3D11 Bridge) - FP16 HMMA"
+        : (g_d3d11Inited ? "MPC-HC Video (D3D11 Passthrough)" : "Road 1 (NvPresent64 Rehost) - FP16 HMMA");
 
     // Update telemetry and check hotkeys (F11=OSD, F10=UI Mask, F9=Heatmap)
-    g_osd.Update(0.59f, engineTitle, g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap, fgActive);
+    g_osd.Update(0.62f, engineTitle, g_uiMaskCfg.enabled, g_uiMaskCfg.debugHeatmap, fgActive);
     g_uiMaskCfg.enabled = g_osd.IsUiMaskEnabled();
     g_uiMaskCfg.debugHeatmap = g_osd.IsDebugHeatmap();
 
@@ -249,12 +267,24 @@ static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
 static HRESULT STDMETHODCALLTYPE HookedPresent(IDXGISwapChain* swap, UINT sync, UINT flags) {
     ActivateSmoothMotionIfWrapped(swap);
     ProcessOverlayAndUiMask(swap);
+
+    if (g_bridge.IsActive()) {
+        if (g_bridge.Present(swap, sync, flags)) {
+            return S_OK;
+        }
+    }
     return g_origPresent(swap, sync, flags);
 }
 
 static HRESULT STDMETHODCALLTYPE HookedPresent1(IDXGISwapChain1* swap, UINT sync, UINT flags, const DXGI_PRESENT_PARAMETERS* p) {
     ActivateSmoothMotionIfWrapped(swap);
     ProcessOverlayAndUiMask(swap);
+
+    if (g_bridge.IsActive()) {
+        if (g_bridge.Present(swap, sync, flags)) {
+            return S_OK;
+        }
+    }
     return g_origPresent1(swap, sync, flags, p);
 }
 
