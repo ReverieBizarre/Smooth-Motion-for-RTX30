@@ -175,6 +175,7 @@ struct SwapState
 {
     IDXGISwapChain3*   sc      = nullptr;
     ID3D12Device*      dev     = nullptr;
+    IDXGIOutput*       output  = nullptr;   // cached for vblank pacing
     sm86::VfiEngine*   engine  = nullptr;
     ID3D12Resource*    capPrev = nullptr;
     ID3D12Resource*    capCur  = nullptr;
@@ -211,6 +212,7 @@ static void releaseResources(SwapState* s)
         if (s->alloc[i]) { s->alloc[i]->Release(); s->alloc[i] = nullptr; }
     if (s->list)  { s->list->Release();  s->list  = nullptr; }
     if (s->fence) { s->fence->Release(); s->fence = nullptr; }
+    if (s->output) { s->output->Release(); s->output = nullptr; }
     if (s->engine) { s->engine->shutdown(); delete s->engine; s->engine = nullptr; }
     s->ready = false;
 }
@@ -296,6 +298,12 @@ static void doFrameGen(SwapState* s, UINT syncInterval, UINT flags)
 
     const UINT f1 = s->tearing ? DXGI_PRESENT_ALLOW_TEARING : 0;
     s->sc->Present(0, f1);                       // -> the synthesised frame
+
+    // --- pacing fix (sm86_pacing): hold the real frame until the next
+    // --- vblank so the two presentations land on ADJACENT refreshes.
+    // --- Without this, both presents are issued back-to-back and coalesce
+    // --- into one slot, producing a ~refresh/2 flicker ("CRT at 50 Hz").
+    if (s->output) s->output->WaitForVBlank();
 
     // 4. now present the real frame, from whichever buffer is current
     const UINT i1 = s->sc->GetCurrentBackBufferIndex();
@@ -440,6 +448,7 @@ static void registerSwapchain(IDXGISwapChain1* sc, const DXGI_SWAP_CHAIN_DESC1& 
 
     SwapState* s = new SwapState();
     s->sc = sc3;
+    sc3->GetContainingOutput(&s->output);   // cached for pacing (may be null)
     s->format = d.Format;
     s->width = d.Width; s->height = d.Height;
     s->bufferCount = d.BufferCount;
