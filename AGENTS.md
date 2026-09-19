@@ -1,4 +1,4 @@
-﻿# AGENTS.md — AI Agent Onboarding Guide
+# AGENTS.md — AI Agent Onboarding Guide
 
 > This file tells AI coding assistants (Antigravity, Claude, Copilot, etc.) everything they need to know to work effectively in this repository **without re-exploring from scratch**.
 
@@ -22,7 +22,6 @@ calm-carson/
 │   ├── proxy/
 │   │   ├── sm86_rehost.cpp        # MAIN FILE: version.dll proxy, all hooks live here
 │   │   ├── early_logger.h         # High-reliability Win32 file logger (SRWLock, WriteFile)
-│   │   ├── proxy.cpp              # Road 2: D3D12 HLSL VFI injection layer
 │   │   ├── d3d11_to_d3d12_bridge.cpp/.h  # D3D11 to D3D12 bridge for MPC-HC etc.
 │   │   ├── osd_overlay.cpp/.h     # On-screen display overlay
 │   │   ├── ui_mask.cpp/.h         # UI mask engine
@@ -31,7 +30,7 @@ calm-carson/
 │   │   └── sm86_addon.cpp         # ReShade addon mode (requires imgui.h from ReShade SDK)
 │   ├── nvof/
 │   │   └── nvofapi.h              # NVOF API header
-│   └── shaders/                   # HLSL shaders (vfi, osd, ui_mask, nvof_up)
+│   └── shaders/                   # HLSL shaders (osd, ui_mask, nvof_up)
 ├── tools/
 │   ├── nvp_live_test.cpp          # End-to-end RTX hardware verification tool
 │   ├── nvp_perf_bench.cpp         # Multi-resolution latency + VRAM benchmark

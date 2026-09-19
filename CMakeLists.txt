@@ -10,23 +10,8 @@ endif()
 if(MSVC)
   add_compile_options(/utf-8 /W3 /MP /EHsc)
   add_compile_definitions(UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
-
-# ---------------------------------------------------------------- Road 2: Shader VFI core
-add_library(sm86_vfi STATIC src/vfi.cpp)
-target_include_directories(sm86_vfi PUBLIC src)
-target_link_libraries(sm86_vfi PRIVATE d3d12 d3dcompiler dxgi)
-
-add_executable(vfi_selftest tools/selftest.cpp)
-target_link_libraries(vfi_selftest PRIVATE sm86_vfi d3d12 dxgi)
-
-# copy shader next to binary
-add_custom_command(TARGET vfi_selftest POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory
-          $<TARGET_FILE_DIR:vfi_selftest>/shaders
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/vfi.hlsl
-          $<TARGET_FILE_DIR:vfi_selftest>/shaders/vfi.hlsl)
 
 # ---------------------------------------------------------------- Road 1: NvPresent64 Live Test & Perf Bench
 add_executable(nvp_live_test tools/nvp_live_test.cpp)

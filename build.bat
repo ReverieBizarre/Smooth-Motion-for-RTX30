@@ -32,5 +32,4 @@ echo   reshade add: build\Release\sm86_smooth.addon64
 echo   live test  : build\Release\nvp_live_test.exe
 echo   benchmark  : build\Release\nvp_perf_bench.exe
 echo   addon test : build\Release\test_addon_simulation.exe
-echo   vfi test   : build\Release\vfi_selftest.exe
 endlocal

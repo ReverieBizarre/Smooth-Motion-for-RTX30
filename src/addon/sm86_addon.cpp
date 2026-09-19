@@ -106,7 +106,6 @@ struct AddonConfig {
     float sensitivity           = 0.08f;
     float blendGain             = 1.0f;
     float crosshairRadius       = 0.04f;
-    int   roadMode              = 0;     // 0: Road 1 NvPresent64, 1: Road 2 HLSL VFI
 };
 
 static AddonConfig g_config;
@@ -491,11 +490,7 @@ static void on_draw_overlay(reshade::api::effect_runtime* /*runtime*/)
 
     // 4. Frame Generation Pipeline
     if (ImGui::CollapsingHeader("Frame Generation Engine")) {
-        const char* roads[] = {
-            "Road 1: NvPresent64 Rehost (Tensor Core Fatbinary)",
-            "Road 2: Native D3D12 HLSL VFI (Shader Compute)"
-        };
-        ImGui::Combo("Engine Pipeline", &g_config.roadMode, roads, IM_ARRAYSIZE(roads));
+        ImGui::Text("Pipeline: NvPresent64 In-Memory Re-Host");
         ImGui::BulletText("Target GPU: NVIDIA GeForce RTX 3080 12GB (GA102 / SM_86)");
         ImGui::BulletText("Fatbinary Status: 19/19 FP16 Kernels Loaded & Verified");
     }

@@ -29,6 +29,7 @@
 #include <cstring>
 #include <cstdio>
 #include <set>
+#include <intrin.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")

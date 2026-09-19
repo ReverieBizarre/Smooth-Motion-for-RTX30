@@ -13,22 +13,17 @@
 
 Previously gated by NVIDIA exclusively to Ada Lovelace (RTX 40 / `sm_89`) and Blackwell (RTX 50 / `sm_120`), this project proves that NVIDIA's proprietary neural frame synthesis pipeline can run natively on Ampere tensor cores **under 1 ms per frame** without modifying system driver files on disk.
 
-In addition to the primary **Road 1 (NvPresent64 In-Memory Re-Host)**, the repository includes **Road 2 (Pure HLSL Compute Shader VFI)** as an open-source, vendor-agnostic fallback.
-
----
-
 ## Table of Contents
 
 - [Executive Summary & Verification Status](#executive-summary--verification-status)
 - [Smooth Motion vs. DLSS-G](#smooth-motion-vs-dlss-g)
-- [Key Reverse Engineering Breakthroughs (Road 1)](#key-reverse-engineering-breakthroughs-road-1)
+- [Key Reverse Engineering Breakthroughs](#key-reverse-engineering-breakthroughs)
   - [1. The Dual-Gate Architecture Classifier Bypass](#1-the-dual-gate-architecture-classifier-bypass)
   - [2. Fatbinary Dynamic IAT Hooking & Dual Header Patching](#2-fatbinary-dynamic-iat-hooking--dual-header-patching)
   - [3. FP16 vs. FP8 Kernel Isolation (Dodging QMMA 715 Traps)](#3-fp16-vs-fp8-kernel-isolation-dodging-qmma-715-traps)
   - [4. The 5-Object COM Swapchain Hierarchy & Activation](#4-the-5-object-com-swapchain-hierarchy--activation)
   - [5. CUDA Graph Ping-Pong Execution & Resolution Guard](#5-cuda-graph-ping-pong-execution--resolution-guard)
 - [Empirical Benchmarks on RTX 3080 Hardware](#empirical-benchmarks-on-rtx-3080-hardware)
-- [Road 2: Standalone HLSL Compute Shader Fallback](#road-2-standalone-hlsl-compute-shader-fallback)
 - [Architecture & Injection Flow](#architecture--injection-flow)
 - [Repository Structure](#repository-structure)
 - [Building & Compiling](#building--compiling)
@@ -41,17 +36,17 @@ In addition to the primary **Road 1 (NvPresent64 In-Memory Re-Host)**, the repos
 
 ## Executive Summary & Verification Status
 
-| Dimension | Road 1 (`NvPresent64` Re-Host) | Road 2 (Pure HLSL Compute) |
-|---|---|---|
-| **Core Mechanism** | In-memory IAT hook & runtime binary re-hosting of `NvPresent64.dll` | Standalone Direct3D 12 compute shader VFI pipeline (`vfi.hlsl`) |
-| **GPU Hardware** | Ampere Tensor Cores (`sm_86`, RTX 30 Series) | Vendor-agnostic (NVIDIA, AMD, Intel, D3D12 FL 11_0+) |
-| **1080p GPU Latency** | **0.622 ms** (~1607 FPS throughput) | 4.31 ms (~232 FPS throughput) |
-| **1440p GPU Latency** | **0.759 ms** (~1317 FPS throughput) | 7.47 ms (~133 FPS throughput) |
-| **4K GPU Latency** | **1.900 ms** (~526 FPS throughput) | 18.2 ms (~55 FPS throughput) |
-| **VRAM Footprint** | ~419 MB (1080p) to ~526 MB (4K) | ~85 MB (1080p) to ~160 MB (4K) |
-| **CUDA Dependency** | Leverages host driver's `nvcuda.dll` | Zero CUDA dependency; 100% native D3D12 |
-| **Motion Vectors** | Self-contained optical flow CNN; no engine MVs required | Hierarchical block-matching pyramid (SAD) |
-| **Verification State** | **100% Verified on RTX 3080 12GB**: 19/19 FP16 fatbinaries loaded, 50/50 warmup kernels passed, live `cuGraphLaunch` execution, verified BMP frame readback | **100% Verified on RTX 3080 12GB**: 31 compute passes, 28.4 dB well-posed PSNR, headless selftest passed |
+| Dimension | Metric / Hardware Result |
+|---|---|
+| **Core Mechanism** | In-memory IAT hook & runtime binary re-hosting of `NvPresent64.dll` (Zero system file modification) |
+| **GPU Hardware** | Ampere Tensor Cores (`sm_86`, GeForce RTX 30 Series) |
+| **1080p GPU Latency** | **0.622 ms** (~1607 FPS throughput) |
+| **1440p GPU Latency** | **0.759 ms** (~1317 FPS throughput) |
+| **4K GPU Latency** | **1.900 ms** (~526 FPS throughput) |
+| **VRAM Footprint** | ~419 MB (1080p) to ~526 MB (4K) bounded footprint |
+| **CUDA Dependency** | Leverages host driver's `nvcuda.dll`; no CUDA Toolkit installation needed |
+| **Motion Vectors** | Self-contained optical flow CNN; **no game-provided MVs or depth buffer required** |
+| **Verification State** | **100% Verified on RTX 3080 12GB**: 19/19 FP16 fatbinaries loaded, 50/50 warmup kernels passed, live `cuGraphLaunch` execution, verified BMP frame readback |
 
 ---
 
@@ -254,26 +249,6 @@ The following metrics were collected directly on physical hardware using the ben
 - **Negligible Frame-Time Impact**: At 1080p and 1440p, frame interpolation consumes **under 0.8 ms** of GPU time. At 144Hz (6.94 ms frame budget) or 60Hz (16.66 ms frame budget), the interpolation pass occupies less than **5% to 11%** of the frame slice.
 - **Constant VRAM Overhead**: Regardless of game complexity, the VRAM consumption is bounded between ~419 MB and ~527 MB, corresponding to the internal optical flow feature pyramid, ping-pong ping buffers, and CUDA graph weights.
 
----
-
-## Road 2: Standalone HLSL Compute Shader Fallback
-
-For environments without CUDA, non-NVIDIA GPUs, or pure Direct3D 12 isolation, the repository provides **Road 2** (`src/shaders/vfi.hlsl` and `src/vfi.cpp`):
-
-```
-luma (x2)                          RGBA -> R32F / R16F (Rec.709)
-luma pyramid (x6)                  1/1 -> 1/2 -> 1/4 -> 1/8
-half-res colour base (x4)          Base + detail frequency split
-block matching, 4x4, both dirs     1/8 wide search -> 1/4 -> 1/2 -> 1/1 refinement
-3x3 median filtering (x2)          Spike removal
-multi-scale hole fill (x4)         Stride 6 & 12 occlusion propagation
-warp + blend (x1)                  Occlusion mask + high-frequency transfer
-```
-
-### Road 2 Highlights:
-- **FP16 Luma Storage**: Using `R16_FLOAT` reduces pyramid memory bandwidth by 2.67x (4.31 ms vs 11.49 ms at 1080p).
-- **Groupshared Memory Tiling**: Uses a 76x76 float groupshared tile (23 KB) during 1/1 and 1/2 refinement to cut global VRAM bandwidth by ~20x.
-- **Base + Detail Frequency Split**: Warps low-frequency color components while preserving unwarped high-frequency edge detail, minimizing motion blur.
 
 ---
 
@@ -318,30 +293,36 @@ warp + blend (x1)                  Occlusion mask + high-frequency transfer
 sm86_smooth/
 ├── CMakeLists.txt              # Unified CMake configuration (MSVC C++17)
 ├── build.bat                   # One-click build script (Visual Studio 2022)
-├── dev_build.bat               # Fast cl.exe incremental build
-├── README.md                   # This comprehensive technical guide
-│
-├── config/
-│   └── sm86_smooth.ini         # User configuration file (radii, blend weights, logging)
+├── README.md                   # This comprehensive technical guide (English)
+├── README_zh.md                # Chinese technical guide
+├── AGENTS.md                   # AI agent onboarding and architectural guide
 │
 ├── src/
 │   ├── proxy/
-│   │   ├── sm86_rehost.cpp     # [Road 1] Production version.dll proxy & NvPresent64 rehost
-│   │   ├── proxy.cpp           # [Road 2] D3D12 proxy injection layer
+│   │   ├── sm86_rehost.cpp     # Production version.dll proxy & NvPresent64 rehost
+│   │   ├── early_logger.h      # High-reliability Win32 file logger (SRWLock, WriteFile)
+│   │   ├── d3d11_to_d3d12_bridge.cpp/.h # D3D11 to D3D12 bridge layer
+│   │   ├── osd_overlay.cpp/.h  # Runtime OSD overlay
+│   │   ├── ui_mask.cpp/.h      # UI protection mask engine
+│   │   ├── pe_scan.h           # PE/IAT pattern scanner utilities
 │   │   └── version.def         # Version.dll export forwarder definition
-│   ├── shaders/
-│   │   └── vfi.hlsl            # [Road 2] Pure HLSL compute shader pipeline (cs_5_0)
-│   ├── vfi.cpp                 # [Road 2] Direct3D 12 VFI engine implementation
-│   └── vfi.h                   # [Road 2] VFI engine headers & descriptor structures
+│   └── shaders/
+│       ├── osd.hlsl            # OSD rendering shader
+│       ├── ui_mask.hlsl        # UI mask shader
+│       └── nvof_up.hlsl        # Optical flow upsampling shader
 │
 ├── tools/
-│   ├── nvp_live_test.cpp       # [Road 1] Live end-to-end verification harness & BMP dumper
-│   ├── nvp_perf_bench.cpp      # [Road 1] High-precision GPU latency & VRAM benchmark suite
-│   ├── selftest.cpp            # [Road 2] Headless D3D12 verification & PSNR measurement
+│   ├── nvp_live_test.cpp       # Live end-to-end verification harness & BMP dumper
+│   ├── nvp_perf_bench.cpp      # High-precision GPU latency & VRAM benchmark suite
 │   ├── proxytest.cpp           # Verification tool for version.dll export forwarding
 │   ├── isa_exec_test.py        # SASS HMMA vs QMMA hardware execution validator
 │   ├── kernel_twin_compare.py  # Binary ELF comparator for FP16 vs FP8 kernel twins
 │   └── patch_nvpresent.py      # Standalone static analyzer & patch explorer
+│
+├── tests/
+│   ├── test_proxy_hardening.cpp   # Safe pointer probing unit tests
+│   ├── test_challenger_stress.cpp # Stress / concurrency tests
+│   └── test_challenger_r1_probing.cpp # Swapchain identification edge cases
 │
 └── demo_out/                   # Verification output (BMP dumps of synthesized frames)
 ```
@@ -371,10 +352,9 @@ build.bat clean
 
 ### Build Artifacts
 Upon completion, the binaries are generated in `build\Release\`:
-- `version.dll`: The drop-in injection proxy for games (Road 1 & Road 2).
+- `version.dll`: The drop-in injection proxy for games (completely self-contained).
 - `nvp_live_test.exe`: The live hardware validation tool for `NvPresent64.dll`.
 - `nvp_perf_bench.exe`: The latency and VRAM performance benchmark suite.
-- `vfi_selftest.exe`: Headless verification harness for the HLSL compute pipeline.
 - `proxytest.exe`: Quick sanity checker confirming export forwarders resolve.
 
 ---
@@ -387,29 +367,13 @@ Place the compiled `version.dll` directly into the target game's executable dire
 ```
 GameFolder/
 ├── Game.exe
-├── version.dll             <-- Copied from build\Release\version.dll
-├── sm86_smooth.ini         <-- Copied from config\sm86_smooth.ini (optional)
-└── shaders/
-    └── vfi.hlsl            <-- (Optional: required only if running Road 2)
+└── version.dll             <-- Copied from build\Release\version.dll
 ```
 
-### Step 2: Configuration (`sm86_smooth.ini`)
-The optional configuration file allows fine-tuning runtime behavior:
-```ini
-[frame_gen]
-enabled=1                   ; 1 = Enable Frame Generation, 0 = Passthrough
-extrapolate=0               ; 0 = Midpoint interpolation (0.5), 1 = Extrapolation
+> **Note**: The proxy DLL is fully self-contained. **No external .ini files or .hlsl shaders are required**.
 
-[present]
-buffer_bump=2               ; Additional backbuffers allocated for presentation
-max_in_flight=3             ; Frames of pipelined command lists
-
-[log]
-log=1                       ; Writes JSONL diagnostic logs to logs\native_<pid>.jsonl
-```
-
-### Step 3: Run the Game
-Launch the game normally. Because Windows searches the application directory before `System32`, `version.dll` is loaded automatically. It spawns a background initialization thread, hooks `NvPresent64.dll`, detours the swapchain, and activates Smooth Motion.
+### Step 2: Run the Game
+Launch the game normally. Because Windows searches the application directory before `System32`, `version.dll` is loaded automatically. It spawns a background initialization thread, hooks `NvPresent64.dll`, detours the swapchain, and activates Smooth Motion. Milestones and initialization telemetry are automatically logged to `logs\sm86_proxy_<pid>.log`.
 
 ---
 

@@ -13,22 +13,17 @@
 
 此前，NVIDIA 在驱动中人为设定了架构软锁，仅允许 Ada Lovelace（RTX 40 系列 / `sm_89`）与 Blackwell（RTX 50 系列 / `sm_120`）使用该特性。本项目不仅在理论与硬件层面证实了 Ampere 的 Tensor Core 能够以**单帧耗时低于 1 毫秒**的极高效率执行该神经网络生成管线，更通过零修改系统磁盘文件的安全方式实现了生产级落地。
 
-除主路线 **Road 1（`NvPresent64` 驱动级纯内存重宿主）** 外，本项目还完整包含 **Road 2（纯 HLSL 独立计算着色器插帧方案）** 作为跨厂商、跨图形 API 的独立纯计算后备路径。
-
----
-
 ## 目录
 
 - [执行摘要与硬件实测状态](#执行摘要与硬件实测状态)
 - [Smooth Motion 与 DLSS-G 的本质区别](#smooth-motion-与-dlss-g-的本质区别)
-- [核心逆向突破深度解析 (Road 1)](#核心逆向突破深度解析-road-1)
+- [核心逆向突破深度解析](#核心逆向突破深度解析)
   - [1. 架构分级器双门控绕过 (Dual-Gate Bypass)](#1-架构分级器双门控绕过-dual-gate-bypass)
   - [2. Fatbinary 动态 IAT 挂钩与容器双头补丁](#2-fatbinary-动态-iat-挂钩与容器双头补丁)
   - [3. FP16 与 FP8 内核隔离机制（完全避开 QMMA 715 异常）](#3-fp16-与-fp8-内核隔离机制完全避开-qmma-715-异常)
   - [4. 5 层 COM 交换链对象包装层级与 Smooth Motion 激活](#4-5-层-com-交换链对象包装层级与-smooth-motion-激活)
   - [5. CUDA Graph 乒乓执行流水线与 480x480 分辨率守卫](#5-cuda-graph-乒乓执行流水线与-480x480-分辨率守卫)
 - [RTX 3080 实机硬件性能实测 (Benchmarks)](#rtx-3080-实机硬件性能实测-benchmarks)
-- [Road 2: 独立纯 HLSL 计算着色器备用方案](#road-2-独立纯-hlsl-计算着色器备用方案)
 - [架构与注入流程](#架构与注入流程)
 - [项目源码目录结构](#项目源码目录结构)
 - [编译指南](#编译指南)
@@ -41,17 +36,17 @@
 
 ## 执行摘要与硬件实测状态
 
-| 评估维度 | Road 1 (`NvPresent64` 内存重宿主) | Road 2 (纯 HLSL 独立计算着色器) |
-|---|---|---|
-| **核心机制** | 运行时 IAT 内存拦截与 `NvPresent64.dll` 动态重宿主 | 独立的 Direct3D 12 经典金字塔块匹配计算着色器 (`vfi.hlsl`) |
-| **硬件需求** | Ampere Tensor Cores (`sm_86`, RTX 30 系列) | 跨厂商通用 (NVIDIA, AMD, Intel, 满足 D3D12 FL 11_0 即可) |
-| **1080p GPU 耗时** | **0.622 ms** (理论上限 ~1607 FPS) | 4.31 ms (理论上限 ~232 FPS) |
-| **1440p GPU 耗时** | **0.759 ms** (理论上限 ~1317 FPS) | 7.47 ms (理论上限 ~133 FPS) |
-| **4K GPU 耗时** | **1.900 ms** (理论上限 ~526 FPS) | 18.2 ms (理论上限 ~55 FPS) |
-| **显存占用 (VRAM)** | ~419 MB (1080p) 至 ~526 MB (4K) | ~85 MB (1080p) 至 ~160 MB (4K) |
-| **CUDA 依赖** | 复用显卡已安装驱动的 `nvcuda.dll` | 零 CUDA 依赖；纯原生 D3D12 流水线 |
-| **运动矢量来源** | 内置光流神经网络自推算；**无需游戏提供运动矢量** | 分层多尺度金字塔块匹配 (SAD) |
-| **实测验证状态** | **RTX 3080 12GB 物理硬件 100% 验证通过**：19/19 FP16 fatbin 零报错加载、50 次预热内核通过、连续 `cuGraphLaunch` 帧生成、生成帧 BMP 回读落盘确认无误 | **RTX 3080 12GB 物理硬件 100% 验证通过**：31 个计算 pass、良态区域 28.4 dB PSNR、无头测试通过 |
+| 评估维度 | 指标参数与实测结果 |
+|---|---|
+| **核心机制** | 运行时 IAT 内存拦截与 `NvPresent64.dll` 动态重宿主（零修改系统文件） |
+| **硬件需求** | Ampere Tensor Cores (`sm_86`，GeForce RTX 30 系列显卡) |
+| **1080p GPU 耗时** | **0.622 ms**（理论上限 ~1607 FPS） |
+| **1440p GPU 耗时** | **0.759 ms**（理论上限 ~1317 FPS） |
+| **4K GPU 耗时** | **1.900 ms**（理论上限 ~526 FPS） |
+| **显存占用 (VRAM)** | ~419 MB (1080p) 至 ~526 MB (4K) 固定开销 |
+| **CUDA 依赖** | 复用系统已安装驱动的 `nvcuda.dll`，无需额外安装 CUDA Toolkit |
+| **运动矢量来源** | 内置光流神经网络自推算；**无需游戏引擎提供运动矢量或深度缓冲** |
+| **实测验证状态** | **RTX 3080 12GB 物理硬件 100% 验证通过**：19/19 FP16 fatbin 零报错加载、50 次预热内核通过、连续 `cuGraphLaunch` 帧生成、生成帧 BMP 回读落盘确认无误 |
 
 ---
 
@@ -254,26 +249,6 @@ Ampere 架构的第三代 Tensor Core 不包含 FP8 矩阵乘加硬件单元（`
 - **帧时间开销极小**：在 1080p 与 1440p 主流分辨率下，单次插帧操作的 GPU 耗时**不到 0.8 毫秒**。在 60Hz（单帧预算 16.66 ms）或 144Hz（单帧预算 6.94 ms）下，插帧仅占用画面渲染周期的 **5% ~ 11%**，玩家几乎感知不到额外的 GPU 负载。
 - **显存常驻开销固定**：无论游戏场景几何体或贴图有多复杂，Smooth Motion 的显存占用均严格保持在 419 MB 至 527 MB 之间，仅包含光流金字塔特征图、乒乓交互缓冲与计算图执行权重的开销。
 
----
-
-## Road 2: 独立纯 HLSL 计算着色器备用方案
-
-对于非 NVIDIA 显卡（如 AMD Radeon、Intel Arc）或不包含 CUDA 环境的轻量化场景，项目完整保留了 **Road 2** 纯着色器插帧方案（`src/shaders/vfi.hlsl` 与 `src/vfi.cpp`）：
-
-```
-luma (x2)                          RGBA 转换为 R32F / R16F 亮度（Rec.709 权重）
-luma pyramid (x6)                  生成 1/1 -> 1/2 -> 1/4 -> 1/8 四级金字塔
-half-res colour base (x4)          低频基底与高频细节拆分
-block matching, 4x4, 双向搜索      1/8 广域搜索 -> 1/4 -> 1/2 -> 1/1 逐级局部细化
-3x3 median filtering (x2)          中值滤波剔除运动突刺噪点
-multi-scale hole fill (x4)         跨距为 6 与 12 的遮挡区域填充
-warp + blend (x1)                  遮挡掩码加权双向扭曲 + 高频细节保真回贴
-```
-
-### Road 2 核心设计要点：
-- **FP16 亮度通道加速**：通过使用 `R16_FLOAT` 存储格式，金字塔读取显存带宽减半，运算性能提升 2.67 倍（1080p 耗时从 11.49 ms 缩减至 4.31 ms）。
-- **共享内存平铺 (Groupshared Tile)**：在细化阶段利用 76x76 浮点平铺共享内存（23 KB），将全局显存读取带宽降低了约 20 倍。
-- **基底与细节频段分离**：对平滑的低频颜色执行运动扭曲，对原始高频边缘细节予以直接保真回贴，有效消除运动模糊。
 
 ---
 
@@ -318,31 +293,36 @@ warp + blend (x1)                  遮挡掩码加权双向扭曲 + 高频细节
 sm86_smooth/
 ├── CMakeLists.txt              # 现代化 CMake 统一工程配置 (MSVC C++17)
 ├── build.bat                   # 一键自动化编译脚本 (Visual Studio 2022)
-├── dev_build.bat               # 快速 cl.exe 增量编译脚本
 ├── README.md                   # 英文技术文档
 ├── README_zh.md                # 中文技术文档 (本文件)
-│
-├── config/
-│   └── sm86_smooth.ini         # 运行时配置文件 (搜索半径、融合权重、日志级别)
+├── AGENTS.md                   # AI 协作与工程规范指南
 │
 ├── src/
 │   ├── proxy/
-│   │   ├── sm86_rehost.cpp     # [Road 1] 生产级 version.dll 动态代理与 NvPresent64 注入重宿主
-│   │   ├── proxy.cpp           # [Road 2] 原生 D3D12 代理注入层
+│   │   ├── sm86_rehost.cpp     # 生产级 version.dll 动态代理与 NvPresent64 注入重宿主
+│   │   ├── early_logger.h      # 高可靠性 Win32 早期落盘日志器 (SRWLock, WriteFile)
+│   │   ├── d3d11_to_d3d12_bridge.cpp/.h # D3D11 到 D3D12 桥接层
+│   │   ├── osd_overlay.cpp/.h  # 运行时 OSD 状态覆盖层
+│   │   ├── ui_mask.cpp/.h      # UI 保护掩码引擎
+│   │   ├── pe_scan.h           # PE/IAT 内存特征扫描工具
 │   │   └── version.def         # Version.dll 导出函数转发定义
-│   ├── shaders/
-│   │   └── vfi.hlsl            # [Road 2] 纯 HLSL 计算着色器插帧内核 (cs_5_0)
-│   ├── vfi.cpp                 # [Road 2] Direct3D 12 独立插帧引擎实现
-│   └── vfi.h                   # [Road 2] 插帧引擎头文件与描述符管理
+│   └── shaders/
+│       ├── osd.hlsl            # OSD 渲染着色器
+│       ├── ui_mask.hlsl        # UI 掩码提取着色器
+│       └── nvof_up.hlsl        # 光流上采样着色器
 │
 ├── tools/
-│   ├── nvp_live_test.cpp       # [Road 1] 端到端实机验证与生成帧 BMP 回读落盘工具
-│   ├── nvp_perf_bench.cpp      # [Road 1] 高精度 GPU 耗时与显存基准测试套件
-│   ├── selftest.cpp            # [Road 2] 无头模式 D3D12 测试与 PSNR 评估程序
+│   ├── nvp_live_test.cpp       # 端到端实机验证与生成帧 BMP 回读落盘工具
+│   ├── nvp_perf_bench.cpp      # 高精度 GPU 耗时与显存基准测试套件
 │   ├── proxytest.cpp           # version.dll 导出转发有效性校验工具
 │   ├── isa_exec_test.py        # SASS 级 HMMA 与 QMMA 指令硬件执行测试脚本
 │   ├── kernel_twin_compare.py  # FP16 与 FP8 内核镜像资源比对工具
 │   └── patch_nvpresent.py      # NvPresent64 静态分析与补丁分析脚本
+│
+├── tests/
+│   ├── test_proxy_hardening.cpp   # 安全指针探测单元测试
+│   ├── test_challenger_stress.cpp # 高并发与压力测试套件
+│   └── test_challenger_r1_probing.cpp # 交换链识别边界测试
 │
 └── demo_out/                   # 实机测试生成的 BMP 画面回读存放目录
 ```
@@ -372,45 +352,28 @@ build.bat clean
 
 ### 生成产物说明
 编译成功后，产物将输出在 `build\Release\` 目录下：
-- `version.dll`：用于放入游戏目录下的免侵入式注入代理 DLL。
+- `version.dll`：用于放入游戏目录下的免侵入式注入代理 DLL（完全自包含，无外部依赖）。
 - `nvp_live_test.exe`：用于验证本机显卡是否已完全激活 Smooth Motion 的测试程序。
 - `nvp_perf_bench.exe`：用于多分辨率插帧延迟与显存消耗的实机基准测试程序。
-- `vfi_selftest.exe`：Road 2 纯计算着色器管线的无头自测程序。
 - `proxytest.exe`：用于验证 17 个 Version API 是否成功转发至系统库的校验程序。
 
 ---
 
 ## 游戏部署与使用方法
 
-### 第一步：复制必要文件
-将编译生成的 `version.dll` 复制到目标游戏的根目录中（即游戏主程序 `.exe` 所在的同级目录）：
+### 第一步：复制代理文件
+将编译生成的单个 `version.dll` 直接复制到目标游戏的根目录中（即游戏主程序 `.exe` 所在的同级目录）：
 
 ```
 游戏目录/
 ├── Game.exe
-├── version.dll             <-- 复制自 build\Release\version.dll
-├── sm86_smooth.ini         <-- 复制自 config\sm86_smooth.ini (可选配置)
-└── shaders/
-    └── vfi.hlsl            <-- (仅在选用 Road 2 纯着色器路线时需要)
+└── version.dll             <-- 复制自 build\Release\version.dll
 ```
 
-### 第二步：参数调优（可选 `sm86_smooth.ini`）
-如果需要微调运行时表现，可编辑配置文件：
-```ini
-[frame_gen]
-enabled=1                   ; 1 = 开启插帧, 0 = 旁路直通
-extrapolate=0               ; 0 = 中间插帧 (0.5 时间步), 1 = 外推预测
+> **提示**：本代理完全自包含，**无需复制任何额外的 .ini 配置文件或 .hlsl 着色器**。
 
-[present]
-buffer_bump=2               ; 额外申请的交换链后备缓冲数量
-max_in_flight=3             ; 队列中允许并行的最大命令列表帧数
-
-[log]
-log=1                       ; 输出 JSONL 诊断日志至 logs\native_<pid>.jsonl
-```
-
-### 第三步：启动游戏
-照常启动游戏即可。Windows 加载器将自动优先加载同目录下的 `version.dll`，随后代理库会在后台线程中自动完成对 `NvPresent64.dll` 的内存补丁与交换链挂钩，并无感开启 Smooth Motion。
+### 第二步：启动游戏
+照常启动游戏即可。Windows 加载器将自动优先加载同目录下的 `version.dll`，随后代理库会在后台线程中自动完成对 `NvPresent64.dll` 的内存补丁与交换链挂钩，并无感开启 Smooth Motion。初始化里程碑会自动记录于游戏目录下的 `logs\sm86_proxy_<pid>.log`。
 
 ---
 
