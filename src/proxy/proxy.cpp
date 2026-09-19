@@ -192,6 +192,8 @@ struct SwapState
     bool               warned  = false;
     ID3D12Resource*    bb[16] = {};
     D3D12_RESOURCE_STATES bbState[16];
+    IDXGIOutput*       cachedOutput = nullptr;
+    HMONITOR           cachedMonitor = nullptr;
 };
 
 static void registerSwapchain(IDXGISwapChain1* sc, const DXGI_SWAP_CHAIN_DESC1& d);
@@ -212,6 +214,8 @@ static void releaseResources(SwapState* s)
     if (s->list)  { s->list->Release();  s->list  = nullptr; }
     if (s->fence) { s->fence->Release(); s->fence = nullptr; }
     if (s->engine) { s->engine->shutdown(); delete s->engine; s->engine = nullptr; }
+    if (s->cachedOutput) { s->cachedOutput->Release(); s->cachedOutput = nullptr; }
+    s->cachedMonitor = nullptr;
     s->ready = false;
 }
 
@@ -233,6 +237,62 @@ static ID3D12Resource* makeTex(ID3D12Device* dev, UINT w, UINT h, DXGI_FORMAT fm
 }
 
 static bool ensureReady(SwapState* s);
+
+// ---------------------------------------------------------------------------
+// VBlank Pacing between dual presents (R3)
+// ---------------------------------------------------------------------------
+static void paceVBlank(SwapState* s)
+{
+    if (!s || !s->sc) return;
+    HWND hwnd = nullptr;
+    DXGI_SWAP_CHAIN_DESC scDesc = {};
+    if (SUCCEEDED(s->sc->GetDesc(&scDesc))) {
+        hwnd = scDesc.OutputWindow;
+    }
+    if (hwnd && IsIconic(hwnd)) return;
+
+    HMONITOR curMon = hwnd ? MonitorFromWindow(hwnd, MONITOR_DEFAULTTONULL) : nullptr;
+    if (curMon && curMon != s->cachedMonitor) {
+        if (s->cachedOutput) {
+            s->cachedOutput->Release();
+            s->cachedOutput = nullptr;
+        }
+        s->cachedMonitor = curMon;
+    }
+
+    if (!s->cachedOutput) {
+        HRESULT hr = s->sc->GetContainingOutput(&s->cachedOutput);
+        if (FAILED(hr)) {
+            s->cachedOutput = nullptr;
+        }
+    }
+
+    if (s->cachedOutput) {
+        HRESULT hrVb = s->cachedOutput->WaitForVBlank();
+        if (FAILED(hrVb)) {
+            s->cachedOutput->Release();
+            s->cachedOutput = nullptr;
+            s->cachedMonitor = nullptr;
+        }
+    }
+}
+
+void PaceVBlankBetweenPresents(IDXGISwapChain* swap)
+{
+    if (!swap) return;
+    HWND hwnd = nullptr;
+    DXGI_SWAP_CHAIN_DESC scDesc = {};
+    if (SUCCEEDED(swap->GetDesc(&scDesc))) {
+        hwnd = scDesc.OutputWindow;
+    }
+    if (hwnd && IsIconic(hwnd)) return;
+
+    IDXGIOutput* output = nullptr;
+    if (SUCCEEDED(swap->GetContainingOutput(&output)) && output) {
+        output->WaitForVBlank();
+        output->Release();
+    }
+}
 
 // ---------------------------------------------------------------------------
 // the frame-gen work for one Present
@@ -296,6 +356,9 @@ static void doFrameGen(SwapState* s, UINT syncInterval, UINT flags)
 
     const UINT f1 = s->tearing ? DXGI_PRESENT_ALLOW_TEARING : 0;
     s->sc->Present(0, f1);                       // -> the synthesised frame
+
+    // Pacing wait: halt until monitor enters VBlank so Present 1 is displayed for full refresh slot
+    paceVBlank(s);
 
     // 4. now present the real frame, from whichever buffer is current
     const UINT i1 = s->sc->GetCurrentBackBufferIndex();

@@ -2,6 +2,7 @@
 //  osd_overlay.cpp - Lightweight Direct3D In-Game OSD Implementation
 // ============================================================================
 #include "osd_overlay.h"
+#include "early_logger.h"
 
 #include <d3dcompiler.h>
 #include <cstdio>
@@ -12,6 +13,13 @@
 #pragma comment(lib, "gdi32.lib")
 
 namespace sm86 {
+
+static void LogBridge(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    sm86::EarlyLogger::Instance().LogV(false, "OSD", fmt, args);
+    va_end(args);
+}
 
 static const char* g_osdShaderSource = R"(
 cbuffer OSDParams : register(b0)
@@ -297,9 +305,10 @@ void OsdOverlay::RenderGdiSurface(float frameGenMs, const char* engineName, bool
 
     // Line 2: FPS & Latency
     if (fgActive) {
-        float baseFps = m_currentFps * 0.5f;
+        float displayFps = m_currentFps * 2.0f;
+        float baseFps = m_currentFps;
         snprintf(buf, sizeof(buf), "Display: %5.1f FPS (Base: %4.1f) | FG Latency: %4.2f ms",
-                 m_currentFps, baseFps, frameGenMs);
+                 displayFps, baseFps, frameGenMs);
         SetTextColor(m_memDC, RGB(255, 220, 80));
     } else {
         snprintf(buf, sizeof(buf), "Display: %5.1f FPS (Native) | FG: INACTIVE (D3D12 Only)",
@@ -494,7 +503,7 @@ bool OsdOverlay::InitializeD3D11(ID3D11Device* device) {
         struct VSOut { float4 pos : SV_Position; float2 uv : TEXCOORD0; };
         float4 PSMain(VSOut i) : SV_Target {
             float2 pixelPos = i.uv * float2(ScreenW, ScreenH);
-            float startX = max(0.0f, ScreenW - OsdW - 24.0f);
+            float startX = 24.0f;
             float startY = 24.0f;
             if (pixelPos.x >= startX && pixelPos.x < startX + OsdW &&
                 pixelPos.y >= startY && pixelPos.y < startY + OsdH) {
@@ -587,6 +596,11 @@ bool OsdOverlay::RenderD3D11(IDXGISwapChain* swap) {
     ID3D11RenderTargetView* rtv = nullptr;
     HRESULT hr = m_device11->CreateRenderTargetView(backbuffer, nullptr, &rtv);
     if (FAILED(hr)) {
+        static int s_rtvFail = 0;
+        if (s_rtvFail++ % 60 == 0) {
+            LogBridge("[OsdOverlay] CreateRenderTargetView failed: 0x%08X (fmt=%d, %ux%u)\n",
+                      (uint32_t)hr, (int)bbDesc.Format, bbDesc.Width, bbDesc.Height);
+        }
         backbuffer->Release();
         return false;
     }
@@ -677,8 +691,13 @@ bool OsdOverlay::RenderD3D11(IDXGISwapChain* swap) {
     m_context11->Draw(3, 0);
 
     // 7. Restore saved state
-    m_context11->OMSetRenderTargets(1, &oldRTV, oldDSV);
+    if (oldRTV) {
+        m_context11->OMSetRenderTargets(1, &oldRTV, oldDSV);
+    } else {
+        m_context11->OMSetRenderTargets(0, nullptr, nullptr);
+    }
     m_context11->RSSetViewports(numVp, oldVp);
+
     m_context11->OMSetBlendState(oldBlend, oldBlendFactor, oldSampleMask);
     m_context11->OMSetDepthStencilState(oldDSS, oldStencilRef);
     m_context11->RSSetState(oldRS);
@@ -705,6 +724,11 @@ bool OsdOverlay::RenderD3D11(IDXGISwapChain* swap) {
 
     rtv->Release();
     backbuffer->Release();
+    static int s_osdSuccess = 0;
+    if (s_osdSuccess++ % 120 == 1) {
+        LogBridge("[OsdOverlay] RenderD3D11 success #%d on backbuffer %ux%u (fmt=%d)\n",
+                  s_osdSuccess, bbDesc.Width, bbDesc.Height, (int)bbDesc.Format);
+    }
     return true;
 }
 

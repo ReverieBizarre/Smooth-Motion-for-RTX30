@@ -1,0 +1,333 @@
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=80270432
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=80276064
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=0000000003FA4640
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=80271136
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=80275360
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1364369752
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=85097568
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=80274656
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=80275360
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=84827936
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=84829344
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=00000000044FA510
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=84087712
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=84096864
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1369532728
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1369486880
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=84096864
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=84087008
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1956110176
+[addon] desc 3840x1826 fmt=87
+[addon] create_resource -> 1 handle=1956112992
+[addon] on_init_swapchain EXIT ok
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78257376
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=78775584
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=0000000003E7C190
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78771360
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=78774880
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1363380024
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1363313088
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78771360
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=78769248
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1260818976
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1260809120
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=000000000456D5F0
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1260816864
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1260812640
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1359595992
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1358772928
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1260816160
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=1260812640
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=115268256
+[addon] desc 64x64 fmt=28
+[addon] create_resource -> 1 handle=1303724768
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1303719136
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1303725472
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=000000004DB2AF00
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1303714912
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1303719840
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=117502968
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1305211328
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1303714912
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=1303719840
+[addon] on_init_swapchain EXIT ok
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=103116064
+[addon] desc 64x64 fmt=28
+[addon] create_resource -> 1 handle=1304322976
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1304318752
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1304319456
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=00000000070B3C00
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1306319136
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1306315616
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1302308632
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=103451616
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1306312800
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=1306315616
+[addon] on_init_swapchain EXIT ok
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1222129184
+[addon] desc 64x64 fmt=28
+[addon] create_resource -> 1 handle=1320281184
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1319774880
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1320278368
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=000000004EB8DA90
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1322689696
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=1322690400
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1220531544
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1317675072
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1322679136
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=1322688992
+[addon] on_init_swapchain EXIT ok
+[addon] DllMain ATTACH, registering ...
+[addon] register_addon OK
+[addon] events registered
+[addon] overlay registered, DllMain done
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78042272
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=78226080
+[addon] on_init_swapchain EXIT ok
+[addon] on_bind_rt #0 count=8 data=0000000003F8F3A0
+[addon] on_bind_rt #1 count=8 data=0000000000000000
+[addon] on_bind_rt #2 count=8 data=0000000000000000
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78227488
+[addon] desc 8x8 fmt=87
+[addon] create_resource -> 1 handle=78220448
+[addon] on_init_swapchain EXIT ok
+[addon] on_init_swapchain ENTER
+[addon] device api=36864
+[addon] back buffer count=1
+[addon] current back buffer handle=1362665464
+[addon] desc 3840x2160 fmt=88
+[addon] create_resource -> 1 handle=1362904192
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=3840x2160 fmt=88 | snapshot=3840x2160 fmt=88
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=78227488
+[addon] desc 2617x1689 fmt=87
+[addon] create_resource -> 1 handle=78216224
+[addon] on_init_swapchain EXIT ok
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] bind_rt: rt=2617x1689 fmt=87 | snapshot=2617x1689 fmt=87
+[addon] on_init_swapchain ENTER
+[addon] device api=45056
+[addon] back buffer count=1
+[addon] current back buffer handle=1366591648
+[addon] desc 3840x1826 fmt=87
+[addon] create_resource -> 1 handle=1366584608
+[addon] on_init_swapchain EXIT ok

@@ -70,3 +70,16 @@ add_executable(test_addon_simulation tools/test_addon_simulation.cpp src/proxy/u
 target_include_directories(test_addon_simulation PRIVATE deps/reshade/include deps/imgui src)
 target_link_libraries(test_addon_simulation PRIVATE d3d12 dxgi user32 d3dcompiler)
 
+# ---------------------------------------------------------------- Proxy Runtime Hardening Test (M1)
+add_executable(test_proxy_hardening tests/test_proxy_hardening.cpp)
+target_link_libraries(test_proxy_hardening PRIVATE d3d11 dxgi user32)
+
+# ---------------------------------------------------------------- Challenger Stress Test Harness (M1)
+add_executable(test_challenger_stress tests/test_challenger_stress.cpp)
+target_link_libraries(test_challenger_stress PRIVATE d3d11 dxgi user32)
+
+# ---------------------------------------------------------------- Challenger 1 R1 Stress Test Harness (M1)
+add_executable(test_challenger_r1 tests/test_challenger_r1_probing.cpp)
+target_link_libraries(test_challenger_r1 PRIVATE d3d11 dxgi user32)
+
+

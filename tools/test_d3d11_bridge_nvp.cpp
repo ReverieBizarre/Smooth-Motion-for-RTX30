@@ -85,14 +85,36 @@ static int __stdcall hook_graph_launch(void* gExec, void* stream) {
     return real_graph_launch(gExec, stream);
 }
 
+#include <winternl.h>
+
+static void SpoofPebProcessName(const wchar_t* fakeExeName) {
+    uint8_t* peb = (uint8_t*)__readgsqword(0x60);
+    uint8_t* params = *(uint8_t**)(peb + 0x20); // ProcessParameters
+    UNICODE_STRING* imgPath = (UNICODE_STRING*)(params + 0x60);
+    wprintf(L"[PEB] Original ImagePath: %s\n", imgPath->Buffer);
+
+    wchar_t* lastSlash = wcsrchr(imgPath->Buffer, L'\\');
+    if (lastSlash) {
+        wcscpy(lastSlash + 1, fakeExeName);
+        imgPath->Length = (USHORT)(wcslen(imgPath->Buffer) * sizeof(wchar_t));
+        wprintf(L"[PEB] Spoofed ImagePath to: %s\n", imgPath->Buffer);
+    }
+}
+
 typedef bool (*pfnInitD3D)(void);
 
 int main() {
+
     setvbuf(stdout, nullptr, _IONBF, 0);
+
+    // If current process is mpc-hc64.exe, spoof it to mpc_game.exe before NvPresent64 loads!
+    SpoofPebProcessName(L"mpc_game.exe");
+
 
     printf("================================================================\n");
     printf("  Testing D3D11-to-D3D12 Shadow SwapChain Bridge for Road 1     \n");
     printf("================================================================\n\n");
+
 
     HMODULE nv = sm86::LoadNvPresent();
     if (!nv) { printf("[!] sm86::LoadNvPresent() failed\n"); return 1; }
@@ -153,6 +175,35 @@ int main() {
     printf("[+] NVP_Init_D3D() -> %s\n", initOk ? "TRUE" : "FALSE");
     if (!initOk) return 1;
 
+    // DIAGNOSTIC HOOK CHECK
+    HMODULE hDxgi = GetModuleHandleA("dxgi.dll");
+    if (hDxgi) {
+        FARPROC p0 = GetProcAddress(hDxgi, "CreateDXGIFactory");
+        FARPROC p1 = GetProcAddress(hDxgi, "CreateDXGIFactory1");
+        FARPROC p2 = GetProcAddress(hDxgi, "CreateDXGIFactory2");
+        printf("[DXGI HOOK CHECK]\n");
+        if (p0) printf("  CreateDXGIFactory:  %p -> bytes: %02x %02x %02x %02x %02x\n",
+                       p0, ((uint8_t*)p0)[0], ((uint8_t*)p0)[1], ((uint8_t*)p0)[2], ((uint8_t*)p0)[3], ((uint8_t*)p0)[4]);
+        if (p1) printf("  CreateDXGIFactory1: %p -> bytes: %02x %02x %02x %02x %02x\n",
+                       p1, ((uint8_t*)p1)[0], ((uint8_t*)p1)[1], ((uint8_t*)p1)[2], ((uint8_t*)p1)[3], ((uint8_t*)p1)[4]);
+        if (p2) printf("  CreateDXGIFactory2: %p -> bytes: %02x %02x %02x %02x %02x\n",
+                       p2, ((uint8_t*)p2)[0], ((uint8_t*)p2)[1], ((uint8_t*)p2)[2], ((uint8_t*)p2)[3], ((uint8_t*)p2)[4]);
+    }
+    HMODULE hD3D12 = GetModuleHandleA("d3d12.dll");
+    if (hD3D12) {
+        FARPROC pDev = GetProcAddress(hD3D12, "D3D12CreateDevice");
+        if (pDev) printf("  D3D12CreateDevice:  %p -> bytes: %02x %02x %02x %02x %02x\n",
+                         pDev, ((uint8_t*)pDev)[0], ((uint8_t*)pDev)[1], ((uint8_t*)pDev)[2], ((uint8_t*)pDev)[3], ((uint8_t*)pDev)[4]);
+    }
+
+    // Check EXE IAT
+    HMODULE hExe = GetModuleHandleA(nullptr);
+    void** iatDxgi = sm86::FindIATEntry(hExe, "dxgi.dll", "CreateDXGIFactory1");
+    if (iatDxgi) printf("  EXE IAT CreateDXGIFactory1: %p -> points to %p\n", iatDxgi, *iatDxgi);
+    void** iatD12 = sm86::FindIATEntry(hExe, "d3d12.dll", "D3D12CreateDevice");
+    if (iatD12) printf("  EXE IAT D3D12CreateDevice:  %p -> points to %p\n", iatD12, *iatD12);
+
+
     // 4. Create Test Window and D3D11 Device & SwapChain
     WNDCLASSA wc = {};
     wc.lpfnWndProc = DefWindowProcA;
@@ -165,15 +216,16 @@ int main() {
     UpdateWindow(hwnd);
 
     DXGI_SWAP_CHAIN_DESC scd = {};
-    scd.BufferCount = 1;
-    scd.BufferDesc.Width = 512;
-    scd.BufferDesc.Height = 512;
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.BufferCount = 2;
+    scd.BufferDesc.Width = 2617;
+    scd.BufferDesc.Height = 1811;
+    scd.BufferDesc.Format = DXGI_FORMAT_R10G10B10A2_UNORM;
     scd.BufferDesc.RefreshRate.Numerator = 60;
     scd.BufferDesc.RefreshRate.Denominator = 1;
     scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     scd.OutputWindow = hwnd;
     scd.SampleDesc.Count = 1;
+    scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     scd.Windowed = TRUE;
 
     ID3D11Device* dev11 = nullptr;
@@ -193,7 +245,7 @@ int main() {
 
     // 5. Initialize D3D11-to-D3D12 Bridge
     sm86::D3D11ToD3D12Bridge bridge;
-    if (!bridge.Initialize(dev11, hwnd, 512, 512, DXGI_FORMAT_R8G8B8A8_UNORM)) {
+    if (!bridge.Initialize(dev11, hwnd, 2617, 1811, DXGI_FORMAT_R10G10B10A2_UNORM)) {
         printf("[!] bridge.Initialize failed!\n");
         return 1;
     }

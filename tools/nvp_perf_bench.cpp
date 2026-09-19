@@ -23,6 +23,7 @@
 #pragma comment(lib, "user32.lib")
 
 #include "../src/proxy/pe_scan.h"
+#include "../src/proxy/early_logger.h"
 
 static const uint32_t FATBIN_MAGIC = 0xba55ed50;
 
@@ -141,8 +142,8 @@ static void RunBenchmark(int width, int height, int totalFrames) {
     f->CreateSwapChainForHwnd(cq, wnd, &sd, nullptr, nullptr, &swap);
     if (!swap) { printf("[!] CreateSwapChainForHwnd failed\n"); return; }
 
-    void* wrapper = *(void**)((uint8_t*)swap + 0x18);
-    if (wrapper) {
+    void* wrapper = nullptr;
+    if (InspectNvPresentSwapChain(swap, 0, &wrapper) && wrapper) {
         void** vt = *(void***)wrapper;
         typedef void (*pfnSetByte)(void*, uint8_t);
         ((pfnSetByte)vt[19])(wrapper, 1);

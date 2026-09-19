@@ -1,0 +1,2409 @@
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7DB40000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7DB40000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7DD12820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFADFCC4AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFADFCC5308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7E317810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004A934080), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004A934080
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000001630EBA
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000001630EBA, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A934080, hwnd=0000000001630EBA, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 000000000AE00E30, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004A69FB50, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 000000000B0D60D0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000001630EBA to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000002CBF6DB0, vtable=00007FFA7DD13228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7DD13228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000000000B1E8730
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80000C006337F4AF
+  m_swap12 + 0x30: 0000000000000000
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000002CBF6DB0 (wrapper @ 000000000B1E8730) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000002CBF6DB0
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000015FC
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000000042ACA1A0, tex12=0000000042C345B0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000001630EBA, Wrapper 000000000B1E8730)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=000000002CBF6DB0)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 presented via shadow swapchain (sync=1, flags=0x00000000)
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Initialize] dev11=000001AB91140380, hwnd=00000000008806AE, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 000001AC2DF1A1F0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000001AC2DE9B7E0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 000001AC2DFA0760, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 00000000008806AE (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000008806AE to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000001AC52E09DA0, vtable=00007FFA7EAF3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7EAF3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000001AC2E06ACB0
+  m_swap12 + 0x20: 000001AC2E074848
+  m_swap12 + 0x28: 88052C00D65A693F
+  m_swap12 + 0x30: 000001AB8841FAB0
+  m_swap12 + 0x38: 000001AC2DA91C50
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000001AC52E09DA0 (wrapper @ 000001AC2E06ACB0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000001AC52E09DA0
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001178
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000001AC53217D20, tex12=000001AC2DFD7F90, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 00000000008806AE, Wrapper 000001AC2E06ACB0)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #1 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #2 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #3 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #4 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #5 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #6 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #7 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #8 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #9 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=000001AC52E09DA0)
+[D3D11ToD3D12Bridge::Present] Frame #10 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #60 presented via shadow swapchain (sync=0, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #120 presented via shadow swapchain (sync=1, flags=0x00000200)
+[D3D11ToD3D12Bridge::Present] Frame #180 presented via shadow swapchain (sync=0, flags=0x00000200)
+[D3D11ToD3D12Bridge::Initialize] dev11=00000233A808EFB0, hwnd=0000000000F211E4, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 0000023444BDCC10, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000023444B57170, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000023444605470, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 0000000000F211E4 (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000F211E4 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000023469C0B880, vtable=00007FFA7EAF3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7EAF3228
+  m_swap12 + 0x08: 000000A400000000
+  m_swap12 + 0x10: 000000010000000F
+  m_swap12 + 0x18: 0000023444CB7E50
+  m_swap12 + 0x20: 0000000001338000
+  m_swap12 + 0x28: 88001200C49E1F80
+  m_swap12 + 0x30: 0000023469C0B8B0
+  m_swap12 + 0x38: 0000023469C0B8B0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000023469C0B880 (wrapper @ 0000023444CB7E50) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000023469C0B880
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001154
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000002346A017060, tex12=0000023444C81220, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 0000000000F211E4, Wrapper 0000023444CB7E50)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #1 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #2 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #3 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #4 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #5 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #6 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #7 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #8 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #9 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=0000023469C0B880)
+[D3D11ToD3D12Bridge::Present] Frame #10 presented via shadow swapchain (sync=1, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #60 presented via shadow swapchain (sync=0, flags=0x00000000)
+[D3D11ToD3D12Bridge::Present] Frame #120 presented via shadow swapchain (sync=1, flags=0x00000200)
+[D3D11ToD3D12Bridge::Present] Frame #180 presented via shadow swapchain (sync=0, flags=0x00000200)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA80A30000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA80A30000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA80C02820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAE3124AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAE3125308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA81207810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004A37C530), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004A37C530
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=00000000040E1768
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=00000000040E1768, res=8x8 (need >=480), dev11=000000004A37C530
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=00000000040E1768, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A37C530, hwnd=00000000040E1768, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000090876F0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004A5C3F80, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000000008FBBB30, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000040E1768 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000000042BB3E70, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 001FFFFF00140800
+  m_swap12 + 0x10: 0100000000000101
+  m_swap12 + 0x18: 0000000008EAC8F0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88000100300AAEB4
+  m_swap12 + 0x30: 0000000000F67F40
+  m_swap12 + 0x38: 0000000000F67F40
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000000042BB3E70 (wrapper @ 0000000008EAC8F0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000000042BB3E70
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001440
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000000042A5F320, tex12=000000004A4373A0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 00000000040E1768, Wrapper 0000000008EAC8F0)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=0000000042BB3E70)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA80A30000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA80A30000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA80C02820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAE3124AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAE3125308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA81207810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000049B41AA0), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000049B41AA0
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000C51736
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000C51736, res=8x8 (need >=480), dev11=0000000049B41AA0
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000C51736, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049B41AA0, hwnd=0000000000C51736, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000093AFA00, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000000934FA80, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000091C33F0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000C51736 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000003CD14350, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000000009455A20
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80027D00C9366649
+  m_swap12 + 0x30: 0000000000000000
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000003CD14350 (wrapper @ 0000000009455A20) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000003CD14350
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=000000000000149C
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000003CE4FDA0, tex12=000000002BCEC890, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000C51736, Wrapper 0000000009455A20)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=000000003CD14350)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000C51736, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049B41AA0, hwnd=0000000000C51736, res=3840x2160, fmt=24
+[BridgeDebug] m_dev12 = 00000000093AFA00, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000003CF61EA0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000091C33F0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000C51736 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000006DA75590, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 0000003300310059
+  m_swap12 + 0x10: 00000000007A17AC
+  m_swap12 + 0x18: 000000000929DA60
+  m_swap12 + 0x20: 00000000000004B4
+  m_swap12 + 0x28: 0000000000000000
+  m_swap12 + 0x30: 0000000876D17F30
+  m_swap12 + 0x38: 00517B42275AC3EC
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000006DA75590 (wrapper @ 000000000929DA60) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000006DA75590
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001688
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000006DD214E0, tex12=000000002BCF4E70, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 3840x2160 (HWND 0000000000C51736, Wrapper 000000000929DA60)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000C51736, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049B41AA0, hwnd=0000000000C51736, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000093AFA00, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000003CF623A0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000091C2C30, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000C51736 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000003D247020, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 65525F5847465F65
+  m_swap12 + 0x10: 656D6172465F6C61
+  m_swap12 + 0x18: 00000000092A0A80
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88002E00CE26357A
+  m_swap12 + 0x30: 000000003D247050
+  m_swap12 + 0x38: 000000003D247050
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000003D247020 (wrapper @ 00000000092A0A80) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000003D247020
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000017A0
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000006DD214E0, tex12=0000000009063250, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000C51736, Wrapper 00000000092A0A80)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #600 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #600 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #600: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #602 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #660 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #660 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #660: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #720 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #720 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #720: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #722 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #780 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #780 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #780: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #840 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #840 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #840: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #842 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #900 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #900 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #900: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #960 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #960 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #960: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #962 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1020 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1020 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1020: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1080 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1080 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1080: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1082 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1140 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1140 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1140: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1200 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1200 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1200: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1202 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1260 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1260 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1260: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1320 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1320 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1320: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1322 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1380 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1380 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1380: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1440 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1440 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1440: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1442 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1500 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1500 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1500: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1560 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1560 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1560: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1562 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1620 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1620 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1620: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1680 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1680 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1680: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1682 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1740 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1740 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1740: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1800 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1800 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1800: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1802 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1860 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1860 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1860: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #1920 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1920 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1920: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #1922 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #1980 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1980 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1980: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2040 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2040 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2040: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2042 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2100 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2100 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2100: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2160 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2160 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2160: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2162 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2220 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2220 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2220: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2280 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2280 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2280: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2282 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2340 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2340 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2340: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2400 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2400 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2400: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2402 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2460 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2460 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2460: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2520 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2520 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2520: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2522 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2580 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2580 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2580: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2640 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2640 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2640: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2642 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2700 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2700 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2700: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2760 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2760 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2760: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2762 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2820 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2820 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2820: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #2880 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2880 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2880: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2882 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #2940 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2940 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2940: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3000 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3000 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3000: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3002 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3060 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3060 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3060: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3600 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3600 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3600: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3602 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3660 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3660 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3660: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3720 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3720 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3720: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3722 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3780 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3780 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3780: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #3840 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3840 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3840: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3842 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #3900 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3900 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3900: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000C51736, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049B41AA0, hwnd=0000000000C51736, res=3840x2160, fmt=24
+[BridgeDebug] m_dev12 = 00000000093AFA00, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000000934EE00, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000091C2C30, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000C51736 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000095CA330, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 65475F5847465F65
+  m_swap12 + 0x10: 5F6465746172656E
+  m_swap12 + 0x18: 00000000092A2290
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88001400CDAEB84B
+  m_swap12 + 0x30: 00000000095CA360
+  m_swap12 + 0x38: 00000000095CA360
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000095CA330 (wrapper @ 00000000092A2290) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000095CA330
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000018A8
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000006DD235E0, tex12=000000003D24E130, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 3840x2160 (HWND 0000000000C51736, Wrapper 00000000092A2290)
+[sm86_rehost] cuGraphLaunch #3960 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3960 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3960: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #3962 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4020 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4020 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4020: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4080 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4080 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4080: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4082 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4140 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4140 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4140: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4200 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4200 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4200: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4202 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4260 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4260 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4260: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4320 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4320 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4320: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4322 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4380 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4380 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4380: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4440 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4440 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4440: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4442 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4500 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4500 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4500: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4560 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4560 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4560: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4562 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4620 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4620 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4620: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4680 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4680 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4680: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4682 on backbuffer 3840x2160 (fmt=24)
+[D3D11ToD3D12Bridge::Initialize] dev11=000001F8069F53B0, hwnd=0000000000AF0FE0, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 000001F86370DD20, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000001F863742940, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 000001F863829CD0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 0000000000AF0FE0 (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000AF0FE0 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000001F8CABC8010, vtable=00007FFA80C03228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA80C03228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000001F8637BF800
+  m_swap12 + 0x20: 000001F8637FC7E8
+  m_swap12 + 0x28: 8000520059C17DCE
+  m_swap12 + 0x30: 3964646265363330
+  m_swap12 + 0x38: 30342D663933632D
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000001F8CABC8010 (wrapper @ 000001F8637BF800) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000001F8CABC8010
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(2) hr=0x00000000, waitable=000000000000117C
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001188
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000001F8CADB6220, tex12=000001F8E4CA8790, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 0000000000AF0FE0, Wrapper 000001F8637BF800)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000001F8CABC8010)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000001F8CABC8010)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000001F8CABC8010)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000001F8CABC8010)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000001F8CABC8010)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] cuGraphLaunch #4740 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4740 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4740: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4800 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4800 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4800: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4802 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4860 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4860 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4860: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #4920 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4920 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4920: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #4922 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #4980 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4980 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4980: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #5040 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5040 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5040: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #5042 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #5100 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5100 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5100: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #5160 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5160 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5160: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #5162 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #5220 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5220 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5220: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #5280 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5280 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5280: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #5282 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #5340 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5340 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5340: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #5400 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5400 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5400: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #5402 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #5460 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5460 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5460: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #5520 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5520 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5520: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #5522 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] cuGraphLaunch #5580 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5580 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5580: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000C51736, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049B41AA0, hwnd=0000000000C51736, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000020778C4F730, hwnd=0000000004BD1328, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 00000207D586F290, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000207D57FF1B0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000207D5903760, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 0000000004BD1328 (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000004BD1328 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000207FA8E6E10, vtable=00007FFA7EAF3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7EAF3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 00000207D5916FB0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80022F00D8730B3E
+  m_swap12 + 0x30: 6946656469636500
+  m_swap12 + 0x38: 30342D003300656C
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000207FA8E6E10 (wrapper @ 00000207D5916FB0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000207FA8E6E10
+[D3D11ToD3D12Bridge] Shadow frame-latency waitable DISABLED (SM86_SHADOW_WAITABLE=0 or no IDXGISwapChain2)
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001164
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000207FA599E20, tex12=00000207D5935560, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 0000000004BD1328, Wrapper 00000207D5916FB0)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000207FA8E6E10)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000207FA8E6E10)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000207FA8E6E10)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000207FA8E6E10)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=00000207FA8E6E10)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA8FEC0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA8FEC0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA90092820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFADFCC4AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFADFCC5308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA90697810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004A4132F0), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004A4132F0
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=000000000066133C
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=000000000066133C, res=8x8 (need >=480), dev11=000000004A4132F0
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=000000000066133C, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A4132F0, hwnd=000000000066133C, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 000000000705B230, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000000006CB7D20, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000000006CAF2C0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 000000000066133C to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000003EA7F000, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 000EE2000C1E1D00
+  m_swap12 + 0x10: 0000600045447625
+  m_swap12 + 0x18: 00000000070D3350
+  m_swap12 + 0x20: 000000042802723C
+  m_swap12 + 0x28: 80014F002DA9835A
+  m_swap12 + 0x30: 0000000444447981
+  m_swap12 + 0x38: 000F22000C1E1D00
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000003EA7F000 (wrapper @ 00000000070D3350) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000003EA7F000
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(2) hr=0x00000000, waitable=0000000000001490
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000014A0
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000003EB8C960, tex12=000000002DDCFDD0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 000000000066133C, Wrapper 00000000070D3350)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=000000003EA7F000)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Initialize] dev11=0000018BBAC037B0, hwnd=0000000003CB0EBE, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 0000018C576993D0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000018C5762DAA0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000018C576F5DA0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 0000000003CB0EBE (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000003CB0EBE to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000018C7C3EE210, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000018C5771B6A0
+  m_swap12 + 0x20: 0000018C577B4A78
+  m_swap12 + 0x28: 880008001EE48C4C
+  m_swap12 + 0x30: 0000018C7C35B7D0
+  m_swap12 + 0x38: 0000018C7BEEF490
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000018C7C3EE210 (wrapper @ 0000018C5771B6A0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000018C7C3EE210
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=0000000000001160
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001174
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000018C7C67AE60, tex12=0000018C5772E9A0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 0000000003CB0EBE, Wrapper 0000018C5771B6A0)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=0000018C7C3EE210)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=0000018C7C3EE210)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=0000018C7C3EE210)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=0000018C7C3EE210)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=0000018C7C3EE210)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[D3D11ToD3D12Bridge::Initialize] dev11=0000017B59044EB0, hwnd=00000000005B118E, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 0000017BB5B92BF0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000017BA1BBE0A0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000017BB5C37F30, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 00000000005B118E (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000005B118E to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000017BFBE61C70, vtable=00007FFA7EAF3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7EAF3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000017BB5C4DC10
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 900184004B8CE07B
+  m_swap12 + 0x30: 0000017BFBE61CA0
+  m_swap12 + 0x38: 0000017BFBE61CA0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000017BFBE61C70 (wrapper @ 0000017BB5C4DC10) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000017BFBE61C70
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000011CC
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000011DC
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000017BE1EED1A0, tex12=0000017BFC0B35A0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 00000000005B118E, Wrapper 0000017BB5C4DC10)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=0000017BFBE61C70)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=0000017BFBE61C70)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=0000017BFBE61C70)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=0000017BFBE61C70)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=0000017BFBE61C70)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA8FEC0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA8FEC0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA90092820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAA7504AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAA7505308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA90697810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000049E732D0), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000049E732D0
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000CA1640
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000CA1640, res=8x8 (need >=480), dev11=0000000049E732D0
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000CA1640, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049E732D0, hwnd=0000000000CA1640, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 0000000009527540, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000000093E41E0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000000009090DA0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000CA1640 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000003CB65CE0, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 00000000094FEFC0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80025900FCCE513F
+  m_swap12 + 0x30: 0000000000000000
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000003CB65CE0 (wrapper @ 00000000094FEFC0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000003CB65CE0
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=0000000000001490
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000014A0
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000003CA44520, tex12=000000002B6C6990, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000CA1640, Wrapper 00000000094FEFC0)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=0 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=1 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=2 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=3 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=0 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=1 (swap3=000000003CB65CE0)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA8FEC0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA8FEC0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA90092820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAE0DB4AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAE0DB5308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA90697810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000049975420), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000049975420
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000041936
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000041936, res=8x8 (need >=480), dev11=0000000049975420
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 8x8 (fmt=24)
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000041936, res=8x8 (need >=480), dev11=0000000049975420
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000041936, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049975420, hwnd=0000000000041936, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 0000000022970590, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000000022A1B720, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000090B0CE0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000041936 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000004D33A350, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 000FE40000000F00
+  m_swap12 + 0x10: 000005D000007944
+  m_swap12 + 0x18: 0000000022A75130
+  m_swap12 + 0x20: FFFFE86000007947
+  m_swap12 + 0x28: 800019006586F451
+  m_swap12 + 0x30: 000000FFFF0E7224
+  m_swap12 + 0x38: 000FE200078E0002
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000004D33A350 (wrapper @ 0000000022A75130) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000004D33A350
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000015A8
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000015B0
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000004D206C20, tex12=000000004D47E910, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000041936, Wrapper 0000000022A75130)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=000000004D33A350)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000041936, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049975420, hwnd=0000000000041936, res=3840x2160, fmt=24
+[BridgeDebug] m_dev12 = 0000000022970590, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004D414060, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000090B1C60, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000041936 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000000916A930, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 65475F5847465F65
+  m_swap12 + 0x10: 5F6465746172656E
+  m_swap12 + 0x18: 00000000091AEAE0
+  m_swap12 + 0x20: 0201060200010000
+  m_swap12 + 0x28: 90004601615DA4F3
+  m_swap12 + 0x30: 000000000916A960
+  m_swap12 + 0x38: 000000000916A960
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000000916A930 (wrapper @ 00000000091AEAE0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000000916A930
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000016FC
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001710
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000006F942CA0, tex12=000000006F911190, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 3840x2160 (HWND 0000000000041936, Wrapper 00000000091AEAE0)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000041936, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000049975420, hwnd=0000000000041936, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 0000000022970590, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004D413660, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000090B3B60, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000041936 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000006C80E360, vtable=00007FFA90093228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA90093228
+  m_swap12 + 0x08: 65475F5847465F65
+  m_swap12 + 0x10: 5F6465746172656E
+  m_swap12 + 0x18: 00000000091B3310
+  m_swap12 + 0x20: 000000002285C738
+  m_swap12 + 0x28: 88004300671FC05E
+  m_swap12 + 0x30: 000000006C80E390
+  m_swap12 + 0x38: 000000006C80E390
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000006C80E360 (wrapper @ 00000000091B3310) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000006C80E360
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=0000000000001818
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001828
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000006F943D20, tex12=000000006F95AF90, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000041936, Wrapper 00000000091B3310)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D320000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D320000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D4F2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAA7504AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAA7505308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DAF7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004A0C4580), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004A0C4580
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=00000000000915EA
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=00000000000915EA, res=8x8 (need >=480), dev11=000000004A0C4580
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=00000000000915EA, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A0C4580, hwnd=00000000000915EA, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 0000000009947BD0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000000099460F0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000000009431D60, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000000915EA to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000447A2410, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000000000990AB50
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80004E00F800900E
+  m_swap12 + 0x30: 0000000000000000
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000447A2410 (wrapper @ 000000000990AB50) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000447A2410
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000014FC
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000014F4
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000000443A0BE0, tex12=0000000044809590, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 00000000000915EA, Wrapper 000000000990AB50)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] SM86_NO_BRIDGE=1: shadow bridge bypassed, app swapchain presents directly
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=00000000000915EA, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A0C4580, hwnd=00000000000915EA, res=3840x2160, fmt=24
+[BridgeDebug] m_dev12 = 0000000009947BD0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000000074A37F50, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000094311C0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000000915EA to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000000004474A7B0, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 000000F000000000
+  m_swap12 + 0x10: 0000000100000011
+  m_swap12 + 0x18: 00000000097249E0
+  m_swap12 + 0x20: 0000000001FE0000
+  m_swap12 + 0x28: 8000E700FA487830
+  m_swap12 + 0x30: 00000014001FFFFF
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000000004474A7B0 (wrapper @ 00000000097249E0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000000004474A7B0
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=0000000000001734
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000016F8
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000004488F120, tex12=000000004480B610, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 3840x2160 (HWND 00000000000915EA, Wrapper 00000000097249E0)
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D320000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D320000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D4F2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA7BC74AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA7BC75308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DAF7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000000772D830), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000000772D830
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000BE0F64
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000BE0F64, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000000772D830, hwnd=0000000000BE0F64, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000524121E0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000000074B78D0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000523E38B0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000BE0F64 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000794290C0, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 65525F5847465F65
+  m_swap12 + 0x10: 656D6172465F6C61
+  m_swap12 + 0x18: 00000000523DD9D0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 8804AA0028B48B60
+  m_swap12 + 0x30: 00000000794290F0
+  m_swap12 + 0x38: 00000000794290F0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000794290C0 (wrapper @ 00000000523DD9D0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000794290C0
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000013D4
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000013F4
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000000797E34A0, tex12=00000000072C71A0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000BE0F64, Wrapper 00000000523DD9D0)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=00000000794290C0)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #600 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #600 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #600: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #602 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #660 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #660 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #660: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #720 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #720 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #720: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #722 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D320000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D320000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D4F2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAA7504AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAA7505308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DAF7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000004187D60), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000004187D60
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=00000000035118A0
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Triggering Bridge Init: hwnd=00000000035118A0, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000004187D60, hwnd=00000000035118A0, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 000000004BE03740, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004BE2D610, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 0000000003F697C0, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000035118A0 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000787018C0, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000000004BE58860
+  m_swap12 + 0x20: 000000004BE69D08
+  m_swap12 + 0x28: 80025E00CB67A868
+  m_swap12 + 0x30: 303732372D636500
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000787018C0 (wrapper @ 000000004BE58860) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000787018C0
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000013F0
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000013FC
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000000D3795DA0, tex12=0000000003A09AC0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 00000000035118A0, Wrapper 000000004BE58860)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=00000000787018C0)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D320000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D320000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D4F2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAA7504AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAA7505308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DAF7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000007D0E430), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000007D0E430
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000D916C0
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000D916C0, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000007D0E430, hwnd=0000000000D916C0, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000499030F0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000000007A27ED0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000499AFE20, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000D916C0 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000D45BA920, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000000049930340
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80001100C965624B
+  m_swap12 + 0x30: 6E616D6D6F63227B
+  m_swap12 + 0x38: 69636544223A2264
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000D45BA920 (wrapper @ 0000000049930340) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000D45BA920
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000013F8
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000013F0
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000000079FD00A0, tex12=000000007953AD80, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000D916C0, Wrapper 0000000049930340)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=00000000D45BA920)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000D916C0, res=2617x1688, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000007D0E430, hwnd=0000000000D916C0, res=2617x1688, fmt=24
+[BridgeDebug] m_dev12 = 00000000499030F0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000000D45E6550, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000499B1D20, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000D916C0 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000000006E53830, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 00000000498EA3B0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88003000C4E08B5A
+  m_swap12 + 0x30: 0000000006E53860
+  m_swap12 + 0x38: 0000000006E53860
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000000006E53830 (wrapper @ 00000000498EA3B0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000000006E53830
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000015F0
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001718
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000000D46EF720, tex12=00000000498A8BF0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1688 (HWND 0000000000D916C0, Wrapper 00000000498EA3B0)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000D916C0, res=2617x1684, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000007D0E430, hwnd=0000000000D916C0, res=2617x1684, fmt=24
+[BridgeDebug] m_dev12 = 00000000499030F0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 00000000D45E7450, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000499B0200, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000D916C0 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000000006E536B0, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000000007C51470
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88002800C4088BB2
+  m_swap12 + 0x30: 0000000006E536E0
+  m_swap12 + 0x38: 0000000006E536E0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000000006E536B0 (wrapper @ 0000000007C51470) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000000006E536B0
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000014F0
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001734
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=00000000D46EFF60, tex12=00000000E1F16D10, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1684 (HWND 0000000000D916C0, Wrapper 0000000007C51470)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1684 (fmt=24)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1684 (fmt=24)
+[sm86_rehost] cuGraphLaunch #540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #600 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #600 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #600: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #602 on backbuffer 2617x1684 (fmt=24)
+[sm86_rehost] cuGraphLaunch #660 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #660 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #660: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D320000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D320000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D4F2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFAA7504AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFAA7505308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DAF7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000007A12780), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000007A12780
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=00000000006618CA
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Triggering Bridge Init: hwnd=00000000006618CA, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=0000000007A12780, hwnd=00000000006618CA, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000528505D0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 0000000052775680, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000526B5C30, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 00000000006618CA to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000D3DBC250, vtable=00007FFA7D4F3228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA7D4F3228
+  m_swap12 + 0x08: 001FFFFF00140800
+  m_swap12 + 0x10: 0100000000000101
+  m_swap12 + 0x18: 00000000525BB8D0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 80013A00576A55F7
+  m_swap12 + 0x30: 00000000077CEA00
+  m_swap12 + 0x38: 30342D006E6F6974
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000D3DBC250 (wrapper @ 00000000525BB8D0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000D3DBC250
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000013E8
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=00000000000013F8
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000000079B406A0, tex12=00000000D3E30AD0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 00000000006618CA, Wrapper 00000000525BB8D0)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=00000000D3DBC250)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #180 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #180 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #240 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #240 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #300 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #300 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #360 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #360 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #420 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #420 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #480 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #480 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #540 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #540 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #540: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #600 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #600 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #600: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #602 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #660 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #660 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #660: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #720 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #720 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #720: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #722 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #780 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #780 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #780: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #840 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #840 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #840: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #842 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] cuGraphLaunch #900 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #900 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #900: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA6D044AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA6D045308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=0000000049C20190), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 0000000049C20190
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000B6184C
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=8x8 (need >=480), dev11=0000000049C20190
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=3840x2160 (need >=480), dev11=0000000049C20190
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=3840x2160 (need >=480), dev11=0000000049C20190
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 3840x2160 (fmt=24)
+[sm86_rehost] HookedPresent #180: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=3840x2160 (need >=480), dev11=0000000049C20190
+[sm86_rehost] HookedPresent #240: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=2617x1689 (need >=480), dev11=0000000049C20190
+[OsdOverlay] RenderD3D11 success #242 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] HookedPresent #300: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=2617x1689 (need >=480), dev11=0000000049C20190
+[sm86_rehost] HookedPresent #360: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=2617x1689 (need >=480), dev11=0000000049C20190
+[OsdOverlay] RenderD3D11 success #362 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] HookedPresent #420: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=2617x1689 (need >=480), dev11=0000000049C20190
+[sm86_rehost] HookedPresent #480: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000B6184C, res=2617x1689 (need >=480), dev11=0000000049C20190
+[OsdOverlay] RenderD3D11 success #482 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA6D044AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA6D045308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004A8A6410), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004A8A6410
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000691302
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000691302, res=8x8 (need >=480), dev11=000000004A8A6410
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000691302, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A8A6410, hwnd=0000000000691302, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000096EE6B0, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004A612900, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 00000000094ED400, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000691302 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=0000000043C95470, vtable=00007FFA6E293228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA6E293228
+  m_swap12 + 0x08: 000000A400000000
+  m_swap12 + 0x10: 000000010000000E
+  m_swap12 + 0x18: 00000000097BD990
+  m_swap12 + 0x20: 00000000011F0000
+  m_swap12 + 0x28: 80005000331D9BE3
+  m_swap12 + 0x30: 0000000000000000
+  m_swap12 + 0x38: 0000000000000000
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 0000000043C95470 (wrapper @ 00000000097BD990) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=0000000043C95470
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000014FC
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=000000000000150C
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=0000000043A403E0, tex12=0000000009806E70, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000691302, Wrapper 00000000097BD990)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=0000000043C95470)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #60 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #60: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] cuGraphLaunch #120 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #120 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #120: sync=1, flags=0x00000000 (Bridge Active)
+[OsdOverlay] RenderD3D11 success #122 on backbuffer 2617x1689 (fmt=24)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000691302, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004A8A6410, hwnd=0000000000691302, res=3840x2160, fmt=24
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA6D044AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA6D045308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] D3D11 Device changed (old=0000000000000000, new=000000004AB44B90), reinitializing overlay & bridge
+[sm86_rehost] D3D11 OSD Overlay initialized on device 000000004AB44B90
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000000, Windowed=1, HWND=0000000000071988
+[sm86_rehost] OutputWindow Styles: Style=0x5E000000, ExStyle=0x00000000
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] Skipping Bridge Init: hwnd=0000000000071988, res=8x8 (need >=480), dev11=000000004AB44B90
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 -> hr=0x00000000
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000071988, res=2617x1689, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004AB44B90, hwnd=0000000000071988, res=2617x1689, fmt=24
+[BridgeDebug] m_dev12 = 00000000077C5680, vtable = 00007FFAAE1308C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000000004A9CA9B0, vtable = 00007FFAAE132FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 000000000742E050, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000071988 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=00000000443AA870, vtable=00007FFA6E293228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA6E293228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 0000000007749AE0
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88001100225A6C26
+  m_swap12 + 0x30: 00000000443AA8A0
+  m_swap12 + 0x38: 00000000443AA8A0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 00000000443AA870 (wrapper @ 0000000007749AE0) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=00000000443AA870
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=00000000000014F4
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001508
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000000004421E3A0, tex12=0000000044412EB0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1689 (HWND 0000000000071988, Wrapper 0000000007749AE0)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 2617x1689 (fmt=24)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #1: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #2: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #3: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #4: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #5: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #6: idx=5 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #6 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #6: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #7: idx=0 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #7 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #7: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #8: idx=1 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #8 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #8: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #9: idx=2 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #9 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #9: sync=1, flags=0x00000000 (Bridge Active)
+[D3D11ToD3D12Bridge::Present] Frame #10: idx=3 (swap3=00000000443AA870)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[D3D11ToD3D12Bridge::Present] Frame #10 (app: sync=1 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] HookedPresent #10: sync=1, flags=0x00000000 (Bridge Active)
+[sm86_rehost] Triggering Bridge Init: hwnd=0000000000071988, res=3840x2160, fmt=24
+[D3D11ToD3D12Bridge::Initialize] dev11=000000004AB44B90, hwnd=0000000000071988, res=3840x2160, fmt=24
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA76854AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA76855308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA76854AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA76855308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] PEB ImagePath spoofed from mpc-hc64.exe to mpc_game.exe (bypassing NVIDIA driver video player blacklist)
+[sm86_rehost] Hooked main executable IAT GetModuleFileNameW -> mpc-hc64.exe preserved for app
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA6E0C0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA6E0C0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA6E292820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FFA76854AE6)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FFA76855308)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA6E897810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D6D0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D6D0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D8A2820 (RVA +0x1d2820)
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA81640000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA81640000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA81812820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF661701840)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6617017D0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA81E17810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000800, Windowed=1, HWND=0000000003FB19FE
+[sm86_rehost] OutputWindow Styles: Style=0x14CF0000, ExStyle=0x00000100
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D6D0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D6D0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D8A2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF661701840)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6617017D0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DEA7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000800, Windowed=1, HWND=0000000005D7036A
+[sm86_rehost] OutputWindow Styles: Style=0x14CF0000, ExStyle=0x00000100
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA79A00000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA79A00000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA79BD2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF6B9E11FC0)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6B9E11EB0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7A1D7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000800, Windowed=1, HWND=00000000001407E0
+[sm86_rehost] OutputWindow Styles: Style=0x14CF0000, ExStyle=0x00000100
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #60: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #120: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA81640000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA81640000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA81812820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF7F9A51360)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF7F9A51300)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA81E17810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[D3D11ToD3D12Bridge::Initialize] dev11=000001F726A3F590, hwnd=0000000000180810, res=2617x1811, fmt=24
+[BridgeDebug] m_dev12 = 000001F7C39B9330, vtable = 00007FFAEFA808C8 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] m_cq12 = 000001F726956F10, vtable = 00007FFAEFA82FE0 (C:\WINDOWS\SYSTEM32\D3D12Core.dll)
+[BridgeDebug] factory = 000001F7269BD290, vtable = 00007FFB715D2FF0 (C:\WINDOWS\SYSTEM32\dxgi.dll)
+[D3D11ToD3D12Bridge] Enforced WS_CLIPCHILDREN on parent HWND 0000000000180810 (was 0x14CF0000)
+[D3D11ToD3D12Bridge] Subclassed parent HWND 0000000000180810 to swallow WM_ERASEBKGND & WM_PAINT
+[D3D11ToD3D12Bridge] m_swap12=000001F70A37E570, vtable=00007FFA81813228 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll)
+  m_swap12 + 0x00: 00007FFA81813228
+  m_swap12 + 0x08: 0000000000000000
+  m_swap12 + 0x10: 0000000000000000
+  m_swap12 + 0x18: 000001F7C3ADE350
+  m_swap12 + 0x20: 0000000000000000
+  m_swap12 + 0x28: 88013200C0DF3653
+  m_swap12 + 0x30: 000001F70A37E5A0
+  m_swap12 + 0x38: 000001F70A37E5A0
+[D3D11ToD3D12Bridge] >>> SUCCESS: NvPresent64 wrapped D3D12 shadow swapchain @ 000001F70A37E570 (wrapper @ 000001F7C3ADE350) <<<
+[D3D11ToD3D12Bridge] QueryInterface swap3_12 -> hr=0x00000000, swap3=000001F70A37E570
+[D3D11ToD3D12Bridge] Shadow frame-latency contract: SetMaximumFrameLatency(1) hr=0x00000000, waitable=0000000000001240
+[D3D11ToD3D12Bridge] CreateSharedHandle (NT handle) -> hr=0x00000000, handle=0000000000001254
+[D3D11ToD3D12Bridge] Shared texture successfully created & opened in D3D12 (tex11=000001F70A1907A0, tex12=000001F70A428EC0, fmt=24)
+[D3D11ToD3D12Bridge] Shadow D3D12 SwapChain Bridge ACTIVE for 2617x1811 (HWND 0000000000180810, Wrapper 000001F7C3ADE350)
+[D3D11ToD3D12Bridge::Present] Frame #1: idx=0 (swap3=000001F70A37E570)
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=6, SwapEffect=4, Flags=0x00000840, Windowed=1, HWND=0000000001A80C44
+[sm86_rehost] OutputWindow Styles: Style=0x44000000, ExStyle=0x00000004
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[D3D11ToD3D12Bridge::Present] Frame #1 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #2: idx=1 (swap3=000001F70A37E570)
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[D3D11ToD3D12Bridge::Present] Frame #2 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #3: idx=2 (swap3=000001F70A37E570)
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[D3D11ToD3D12Bridge::Present] Frame #3 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #4: idx=3 (swap3=000001F70A37E570)
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[D3D11ToD3D12Bridge::Present] Frame #4 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[D3D11ToD3D12Bridge::Present] Frame #5: idx=4 (swap3=000001F70A37E570)
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[D3D11ToD3D12Bridge::Present] Frame #5 (app: sync=0 flags=0x0 -> shadow: sync=1 flags=0x0) hr=0x00000000
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA79A00000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA79A00000
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000000)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA81640000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA81640000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA81812820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF661701840)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6617017D0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA81E17810 (RVA +0x7d7810)
+[CRASH] Code=0x80000003 at 00007FFA81677AB9 (Module: C:\Windows\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_a3944b54ff18b284\NvPresent64.dll, offset 0x37ab9)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA7D6D0000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA7D6D0000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA7D8A2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF661701840)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6617017D0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7DEA7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000800, Windowed=1, HWND=0000000005340EF0
+[sm86_rehost] OutputWindow Styles: Style=0x14CF0000, ExStyle=0x00000100
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[sm86_rehost] >>> StartupThread STARTED <<<
+[sm86_rehost] LoadNvPresent() -> 00007FFA79A00000
+[sm86_rehost] Initializing NvPresent64 rehost @ 00007FFA79A00000
+[sm86_rehost] Gate located via Pattern Scan (cmp imm RVA +0xc41f, setge RVA +0xc437, len 4)
+[sm86_rehost] Gate patch applied: Tier 2 allowed, sil=1 forced
+[sm86_rehost] IAT cuModuleLoadData found dynamically @ 00007FFA79BD2820 (RVA +0x1d2820)
+[sm86_rehost] IAT cuModuleLoadData hooked (original @ 00007FF6B9E11FC0)
+[sm86_rehost] IAT cuGraphLaunch hooked (original @ 00007FF6B9E11EB0)
+[sm86_rehost] Config struct resolved dynamically from NVP_Init_D3D @ 00007FFA7A1D7810 (RVA +0x7d7810)
+[sm86_rehost] NVP_Init_D3D() -> TRUE
+[sm86_rehost] ApplyRehost() -> TRUE
+[sm86_rehost] DXGI Present hooks installed (slot 8 & slot 22)
+[sm86_rehost] Setup completed successfully!
+[sm86_rehost] cuGraphLaunch #1 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] swap11 Desc: BufferCount=2, SwapEffect=4, Flags=0x00000800, Windowed=1, HWND=0000000005E9036A
+[sm86_rehost] OutputWindow Styles: Style=0x14CF0000, ExStyle=0x00000100
+[sm86_rehost] swap11 supports IDXGISwapChain3! CurBackBufferIndex=0
+[sm86_rehost] HookedPresent #1: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #2: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #2 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #3: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #4: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #3 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #5: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #6: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #4 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #7: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #8: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #5 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #9: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] HookedPresent #10: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #6 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #7 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #8 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #9 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] cuGraphLaunch #10 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #60: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] cuGraphLaunch #60 (Ampere FP16 HMMA Tensor Cores Active!)
+[sm86_rehost] HookedPresent #120: sync=0, flags=0x00000200 -> hr=0x087A0001
+[sm86_rehost] DllMain DLL_PROCESS_DETACH (lpReserved=0000000000000001)
+[sm86_rehost] Process is exiting (atexit called)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)
+[OsdOverlay] RenderD3D11 success #2 on backbuffer 800x600 (fmt=28)

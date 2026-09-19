@@ -27,6 +27,7 @@
 #pragma comment(lib, "user32.lib")
 
 #include "../src/proxy/pe_scan.h"
+#include "../src/proxy/early_logger.h"
 
 static const uint32_t FATBIN_MAGIC = 0xba55ed50;
 
@@ -333,8 +334,17 @@ int main() {
     f->CreateSwapChainForHwnd(cq, wnd, &sd, nullptr, nullptr, &swap);
     if (!swap) { printf("[!] CreateSwapChainForHwnd failed\n"); return 1; }
 
-    void* wrapper = *(void**)((uint8_t*)swap + 0x18);
-    printf("[+] SwapChain created @ %p (Proxy COM Object, Internal Wrapper @ %p)\n", swap, wrapper);
+    void* wrapper = nullptr;
+    if (!InspectNvPresentSwapChain(swap, (uintptr_t)nv, &wrapper) || !wrapper) {
+        printf("[!] InspectNvPresentSwapChain failed to detect genuine NvPresent wrapper (swap=%p)\n", swap);
+        swap->Release();
+        f->Release();
+        cq->Release();
+        dev->Release();
+        DestroyWindow(wnd);
+        return 1;
+    }
+    printf("[+] SwapChain created @ %p (Verified NvPresent64 Proxy, Internal Wrapper @ %p)\n", swap, wrapper);
 
     if (wrapper) {
         void** vt = *(void***)wrapper;

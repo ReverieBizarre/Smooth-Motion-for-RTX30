@@ -22,6 +22,75 @@
 
 #include "../proxy/ui_mask.h"
 
+#include <cstdio>
+#include <cstdarg>
+
+// ---------------------------------------------------------------------------
+//  Crash triage logging.
+//  The player dies inside ReShade's dxgi.dll while this add-on is loaded, so the
+//  last line written here tells us which callback (if any) ran before the fault.
+//  Writes to the project directory, same convention as the other modules.
+// ---------------------------------------------------------------------------
+static void AddonLog(const char* fmt, ...) {
+    char buf[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, args);
+    va_end(args);
+    OutputDebugStringA(buf);
+
+    static wchar_t s_logPath[MAX_PATH] = {};
+    static bool    s_resolved = false;
+    static SRWLOCK s_lock = SRWLOCK_INIT;
+
+    AcquireSRWLockExclusive(&s_lock);
+    if (!s_resolved) {
+        s_resolved = true;
+        HMODULE hMod = nullptr;
+        GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                           GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           (LPCWSTR)&AddonLog, &hMod);
+        wchar_t modPath[MAX_PATH] = {};
+        if (hMod) {
+            GetModuleFileNameW(hMod, modPath, MAX_PATH);
+        } else {
+            GetModuleFileNameW(nullptr, modPath, MAX_PATH);
+        }
+        wchar_t* lastSlash = wcsrchr(modPath, L'\\');
+        if (lastSlash) {
+            *(lastSlash + 1) = L'\0';
+        }
+
+        DWORD pid = GetCurrentProcessId();
+        wchar_t logDir[MAX_PATH] = {};
+        swprintf_s(logDir, L"%slogs", modPath);
+        CreateDirectoryW(logDir, nullptr);
+        swprintf_s(s_logPath, L"%s\\sm86_addon_%lu.log", logDir, pid);
+
+        FILE* testF = nullptr;
+        if (_wfopen_s(&testF, s_logPath, L"a") == 0 && testF) {
+            fclose(testF);
+        } else {
+            wchar_t localApp[MAX_PATH] = {};
+            if (GetEnvironmentVariableW(L"LOCALAPPDATA", localApp, MAX_PATH) > 0) {
+                wchar_t appDir[MAX_PATH] = {};
+                swprintf_s(appDir, L"%s\\sm86_smooth", localApp);
+                CreateDirectoryW(appDir, nullptr);
+                swprintf_s(logDir, L"%s\\sm86_smooth\\logs", localApp);
+                CreateDirectoryW(logDir, nullptr);
+                swprintf_s(s_logPath, L"%s\\sm86_addon_%lu.log", logDir, pid);
+            }
+        }
+    }
+
+    FILE* f = nullptr;
+    if (_wfopen_s(&f, s_logPath, L"a") == 0 && f) {
+        fputs(buf, f);
+        fclose(f);
+    }
+    ReleaseSRWLockExclusive(&s_lock);
+}
+
 // Metadata exported for ReShade
 extern "C" __declspec(dllexport) const char* NAME = "SM86 Smooth Motion";
 extern "C" __declspec(dllexport) const char* DESCRIPTION = "Pass-Level DrawCall Interception & UI Mask Protection (RenoDX/DLSS5 Style)";
@@ -87,15 +156,18 @@ static SwapchainData* g_active_swapchain_data = nullptr;
 static void on_init_swapchain(reshade::api::swapchain* swapchain, bool /*resize*/)
 {
     std::lock_guard<std::mutex> lock(g_mutex);
+    AddonLog("[addon] on_init_swapchain ENTER\n");
     auto* data = swapchain->create_private_data<SwapchainData>();
-    if (!data) return;
+    if (!data) { AddonLog("[addon] create_private_data FAILED\n"); return; }
 
     data->swapchain = swapchain;
     data->device = swapchain->get_device();
     data->last_present_time = std::chrono::high_resolution_clock::now();
+    AddonLog("[addon] device api=%d\n", data->device ? (int)data->device->get_api() : -1);
 
     // Cache all backbuffer handles
     const uint32_t count = swapchain->get_back_buffer_count();
+    AddonLog("[addon] back buffer count=%u\n", count);
     data->backbuffer_handles.clear();
     for (uint32_t i = 0; i < count; i++) {
         data->backbuffer_handles.push_back(swapchain->get_back_buffer(i).handle);
@@ -103,10 +175,12 @@ static void on_init_swapchain(reshade::api::swapchain* swapchain, bool /*resize*
 
     // Get backbuffer description to allocate matching clean scene texture
     const reshade::api::resource backbuffer = swapchain->get_current_back_buffer();
+    AddonLog("[addon] current back buffer handle=%llu\n", (unsigned long long)backbuffer.handle);
     const reshade::api::resource_desc desc = data->device->get_resource_desc(backbuffer);
     data->width = desc.texture.width;
     data->height = desc.texture.height;
     data->format = desc.texture.format;
+    AddonLog("[addon] desc %ux%u fmt=%d\n", data->width, data->height, (int)data->format);
 
     // Create a clone resource for clean scene snapshots
     reshade::api::resource_desc clean_desc = desc;
@@ -114,17 +188,21 @@ static void on_init_swapchain(reshade::api::swapchain* swapchain, bool /*resize*
                        reshade::api::resource_usage::copy_source |
                        reshade::api::resource_usage::shader_resource;
 
-    data->device->create_resource(clean_desc, nullptr, reshade::api::resource_usage::copy_dest, &data->clean_scene_resource);
+    const bool created = data->device->create_resource(clean_desc, nullptr, reshade::api::resource_usage::copy_dest, &data->clean_scene_resource);
+    AddonLog("[addon] create_resource -> %d handle=%llu\n", (int)created, (unsigned long long)data->clean_scene_resource.handle);
 
     // If D3D12, initialize UiMaskEngine
     if (data->device->get_api() == reshade::api::device_api::d3d12) {
+        AddonLog("[addon] d3d12 path, init UiMaskEngine\n");
         ID3D12Device* d3d12_device = reinterpret_cast<ID3D12Device*>(data->device->get_native());
         if (d3d12_device) {
             data->ui_mask_ready = data->ui_mask_engine.Initialize(d3d12_device);
+            AddonLog("[addon] UiMaskEngine ready=%d\n", (int)data->ui_mask_ready);
         }
     }
 
     g_active_swapchain_data = data;
+    AddonLog("[addon] on_init_swapchain EXIT ok\n");
 }
 
 static void on_destroy_swapchain(reshade::api::swapchain* swapchain, bool /*resize*/)
@@ -156,10 +234,23 @@ static void on_bind_render_targets_and_depth_stencil(
     if (count == 0 || !rtvs) return;
 
     SwapchainData* data = g_active_swapchain_data;
+    static int s_rtLog = 0;
+    if (s_rtLog < 3) { AddonLog("[addon] on_bind_rt #%d count=%u data=%p\n", s_rtLog++, count, (void*)data); }
     if (!data || data->captured_this_frame) return;
+    if (!cmd_list) { AddonLog("[addon] on_bind_rt: null cmd_list\n"); return; }
+
+    // D3D11 OMSetRenderTargets can be handed 8 slots with only some of them bound.
+    // A null view handle here made ReShade dereference 0x0 inside its own dxgi.dll
+    // (the observed ACCESS VIOLATION at address 0), so skip unbound slots.
+    uint32_t slot = 0;
+    while (slot < count && rtvs[slot].handle == 0) slot++;
+    if (slot >= count) return;
 
     reshade::api::device* device = cmd_list->get_device();
-    reshade::api::resource bound_res = device->get_resource_from_view(rtvs[0]);
+    if (!device) { AddonLog("[addon] on_bind_rt: null device\n"); return; }
+
+    reshade::api::resource bound_res = device->get_resource_from_view(rtvs[slot]);
+    if (bound_res.handle == 0) return;
 
     // Check if the target is one of our swapchain backbuffers
     bool is_backbuffer = false;
@@ -181,7 +272,48 @@ static void on_bind_render_targets_and_depth_stencil(
         trigger_capture = true;
     }
 
-    if (trigger_capture && data->clean_scene_resource.handle != 0) {
+    if (!trigger_capture) return;
+    if (data->clean_scene_resource.handle == 0) return;
+
+    // At init time D3D11 hands us an 8x8 placeholder backbuffer, so the snapshot
+    // texture may have been allocated at the wrong size. Copying between mismatched
+    // resources is undefined and was a crash candidate; re-allocate to the real size.
+    {
+        const reshade::api::resource_desc rt_desc = device->get_resource_desc(bound_res);
+        static int s_descLog = 0;
+        if (s_descLog < 3) {
+            AddonLog("[addon] bind_rt: rt=%ux%u fmt=%d | snapshot=%ux%u fmt=%d\n",
+                     rt_desc.texture.width, rt_desc.texture.height, (int)rt_desc.texture.format,
+                     data->width, data->height, (int)data->format);
+            s_descLog++;
+        }
+        if (rt_desc.texture.width  != data->width ||
+            rt_desc.texture.height != data->height ||
+            rt_desc.texture.format != data->format)
+        {
+            AddonLog("[addon] bind_rt: re-allocating snapshot %ux%u -> %ux%u\n",
+                     data->width, data->height, rt_desc.texture.width, rt_desc.texture.height);
+            device->destroy_resource(data->clean_scene_resource);
+            data->clean_scene_resource = { 0 };
+
+            reshade::api::resource_desc clean_desc = rt_desc;
+            clean_desc.usage = reshade::api::resource_usage::copy_dest |
+                               reshade::api::resource_usage::copy_source |
+                               reshade::api::resource_usage::shader_resource;
+            if (!device->create_resource(clean_desc, nullptr,
+                                         reshade::api::resource_usage::copy_dest,
+                                         &data->clean_scene_resource)) {
+                AddonLog("[addon] bind_rt: re-allocation FAILED\n");
+                data->clean_scene_resource = { 0 };
+                return;
+            }
+            data->width  = rt_desc.texture.width;
+            data->height = rt_desc.texture.height;
+            data->format = rt_desc.texture.format;
+        }
+    }
+
+    {
         // Intercept right before the first UI drawcall executes on the backbuffer!
         // At this precise instant, the backbuffer contains the pure, clean 3D scene (100% UI-free).
         cmd_list->barrier(data->clean_scene_resource,
@@ -382,8 +514,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID)
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
+        AddonLog("[addon] DllMain ATTACH, registering ...\n");
         if (!reshade::register_addon(hinstDLL))
             return FALSE;
+        AddonLog("[addon] register_addon OK\n");
 
         reshade::register_event<reshade::addon_event::init_swapchain>(on_init_swapchain);
         reshade::register_event<reshade::addon_event::destroy_swapchain>(on_destroy_swapchain);
@@ -391,8 +525,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID)
         reshade::register_event<reshade::addon_event::draw>(on_draw);
         reshade::register_event<reshade::addon_event::draw_indexed>(on_draw_indexed);
         reshade::register_event<reshade::addon_event::present>(on_present);
+        AddonLog("[addon] events registered\n");
 
         reshade::register_overlay("SM86 Smooth Motion", on_draw_overlay);
+        AddonLog("[addon] overlay registered, DllMain done\n");
         break;
 
     case DLL_PROCESS_DETACH:
