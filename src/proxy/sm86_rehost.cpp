@@ -89,15 +89,64 @@ static bool patch_bytes(uint8_t* p, const uint8_t* pat, size_t n) {
     return true;
 }
 
-static void patch_fatbin(uint8_t* b, size_t size) {
-    for (size_t off = 0; off + 3 < size; off += 4)
-        if ((b[off] == 0x78 || b[off] == 0x59) && b[off+1] == 0 && b[off+2] == 0 && b[off+3] == 0)
-            b[off] = 0x56;
-    for (size_t off = 0; off + 0x34 < size; ++off)
-        if (b[off] == 0x7f && b[off+1] == 'E' && b[off+2] == 'L' && b[off+3] == 'F') {
-            uint32_t fl = 0x560556;
-            memcpy(b + off + 0x30, &fl, 4);
+// Rebuilds a fatbin container so the driver accepts it on sm_86.
+//
+// Only the sm_89 ELF entry is kept. Its entry header gets arch 86 and the ELF
+// e_flags SM field is rewritten in place. Two e_flags layouts exist:
+//   EI_ABIVERSION 7 (616.64 and older): SM in bytes 0 and 2, e.g. 0x590559
+//   EI_ABIVERSION 8 (616.92 and newer): SM in byte 1, e.g. 0x6005904
+//
+// The previous approach rewrote every 0x59/0x78 dword in the whole image and
+// forced e_flags to 0x560556. That also hit data inside the cubins, which is
+// why the generated frames came out black: conv_fused produced values around
+// 1e4, attn1 overflowed fp16 into NaN, and the final surface store converted
+// NaN to 0. With the new layout it did not load at all (CUDA_ERROR_INVALID_IMAGE).
+//
+// Returns a malloc'd image and its length, or nullptr if the container does
+// not parse or has no sm_89 entry. The returned buffer is intentionally never
+// freed: the driver may keep referencing it.
+static uint8_t* relabel_fatbin(const uint8_t* img, size_t* out_len) {
+    if (!img || *(const uint32_t*)img != FATBIN_MAGIC) return nullptr;
+    const uint16_t version = *(const uint16_t*)(img + 4);
+    const uint16_t hsize = *(const uint16_t*)(img + 6);
+    const uint64_t size = *(const uint64_t*)(img + 8);
+    if (version != 1 || hsize != 16 || size == 0 || size > (64ull << 20)) return nullptr;
+
+    uint8_t* out = (uint8_t*)malloc((size_t)size + 16);
+    if (!out) return nullptr;
+    memcpy(out, img, 16);
+    size_t w = 16;
+    int kept = 0;
+
+    const uint8_t* e = img + hsize;
+    const uint8_t* end = img + hsize + size;
+    while (e + 32 <= end) {
+        const uint16_t kind = *(const uint16_t*)e;
+        const uint32_t ehsize = *(const uint32_t*)(e + 4);
+        const uint64_t padded = *(const uint64_t*)(e + 8);
+        if ((kind != 1 && kind != 2) || ehsize < 32 || padded == 0 || e + ehsize + padded > end) break;
+
+        const uint32_t arch = *(const uint32_t*)(e + 28);
+        if (kind == 2 && arch == 89) {
+            memcpy(out + w, e, ehsize + (size_t)padded);
+            uint8_t* hdr = out + w;
+            uint8_t* elf = out + w + ehsize;
+            *(uint32_t*)(hdr + 28) = 86;
+            if (padded >= 0x34 && memcmp(elf, "\x7f" "ELF", 4) == 0) {
+                uint32_t ef = *(uint32_t*)(elf + 0x30);
+                if (elf[8] >= 8) ef = (ef & ~0xff00u) | 0x5600u;
+                else             ef = (ef & ~0x00ff00ffu) | 0x00560056u;
+                *(uint32_t*)(elf + 0x30) = ef;
+            }
+            w += ehsize + (size_t)padded;
+            ++kept;
         }
+        e += ehsize + padded;
+    }
+    if (!kept) { free(out); return nullptr; }
+    *(uint64_t*)(out + 8) = (uint64_t)(w - 16);
+    *out_len = w;
+    return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -109,13 +158,13 @@ static cuModuleLoadData_t g_realModuleLoadData = nullptr;
 static int __stdcall hook_cuModuleLoadData(void** module, const void* image) {
     const uint8_t* p = (const uint8_t*)image;
     if (p && *(const uint32_t*)p == FATBIN_MAGIC) {
-        uint64_t size = *(const uint64_t*)(p + 8);
-        PROXY_MILESTONE(7, "FATBIN", "Fatbin patch applied: rewrote %llu bytes to sm_86 (magic=0x%08X)\n", size, FATBIN_MAGIC);
-        static uint8_t buf[8 * 1024 * 1024];
-        if (size < sizeof(buf)) {
-            memcpy(buf, p, (size_t)size);
-            patch_fatbin(buf, (size_t)size);
-            p = buf;
+        size_t len = 0;
+        uint8_t* relabeled = relabel_fatbin(p, &len);
+        if (relabeled) {
+            PROXY_MILESTONE(7, "FATBIN", "Fatbin relabeled for sm_86: %zu bytes\n", len);
+            p = relabeled;
+        } else {
+            PROXY_LOG("[sm86_rehost] WARNING: fatbin at %p has no sm_89 entry, passing it through unchanged\n", image);
         }
     }
     return g_realModuleLoadData(module, p);
