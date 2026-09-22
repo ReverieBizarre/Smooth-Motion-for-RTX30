@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(sm86_smooth CXX)
+project(sm86_smooth C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,10 +20,22 @@ target_link_libraries(nvp_live_test PRIVATE d3d12 dxgi user32)
 add_executable(nvp_perf_bench tools/nvp_perf_bench.cpp)
 target_link_libraries(nvp_perf_bench PRIVATE d3d12 dxgi user32)
 
+# ---------------------------------------------------------------- MinHook (inline hooks for DXGI and nvcuda)
+add_library(minhook STATIC
+  deps/minhook/src/buffer.c
+  deps/minhook/src/hook.c
+  deps/minhook/src/trampoline.c
+  deps/minhook/src/hde/hde64.c)
+target_include_directories(minhook PUBLIC deps/minhook/include)
+
 # ---------------------------------------------------------------- Road 1: Proxy DLL (version.dll)
 add_library(version SHARED src/proxy/sm86_rehost.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp src/proxy/d3d11_to_d3d12_bridge.cpp)
-target_link_libraries(version PRIVATE d3d12 d3d11 dxgi user32 gdi32 d3dcompiler)
+target_link_libraries(version PRIVATE minhook d3d12 d3d11 dxgi user32 gdi32 d3dcompiler version advapi32)
 set_target_properties(version PROPERTIES PREFIX "")
+
+# ---------------------------------------------------------------- Present probe (loads the built proxy into a minimal D3D12 presenter)
+add_executable(nvp_present_probe tools/nvp_present_probe.cpp)
+target_link_libraries(nvp_present_probe PRIVATE d3d12 dxgi user32)
 
 # ---------------------------------------------------------------- UI Mask & OSD Test
 add_executable(test_osd_uimask tools/test_osd_uimask.cpp src/proxy/ui_mask.cpp src/proxy/osd_overlay.cpp)

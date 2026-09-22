@@ -10,36 +10,185 @@
 #include <cstdint>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
+
+#pragma comment(lib, "version.lib")
+#pragma comment(lib, "advapi32.lib")
 
 namespace sm86 {
 
 // ---------------------------------------------------------------------------
-// 1. Dynamic NvPresent64 Loader (System32 + DriverStore Wildcard Search)
+// 1. NvPresent64 loader
+//
+// DriverStore keeps packages from earlier driver installs, so the first
+// nv_dispi.inf_amd64_* folder is often a stale build. The loader picks the
+// package whose nvlddmkm.sys version equals the installed display driver and
+// falls back to the newest one. A file named sm86_nvpresent_path.txt next to
+// the proxy overrides the choice with an explicit path.
+//
+// The chosen file is loaded through a private copy next to the proxy. The
+// display driver loads its own NvPresent64 for some games (the NVIDIA App
+// profile path); patching that instance makes D3D12CreateDevice fail with
+// DXGI_ERROR_UNSUPPORTED. A copy on a different path is a separate module,
+// and the driver's own instance simply declines on RTX 30 as before.
 // ---------------------------------------------------------------------------
+inline uint64_t FileVersionOf(const char* path) {
+    DWORD dummy = 0;
+    DWORD sz = GetFileVersionInfoSizeA(path, &dummy);
+    if (!sz) return 0;
+    uint8_t* buf = (uint8_t*)malloc(sz);
+    if (!buf) return 0;
+    uint64_t v = 0;
+    if (GetFileVersionInfoA(path, 0, sz, buf)) {
+        VS_FIXEDFILEINFO* fi = nullptr; UINT len = 0;
+        if (VerQueryValueA(buf, "\\", (void**)&fi, &len) && fi) {
+            v = ((uint64_t)fi->dwFileVersionMS << 32) | fi->dwFileVersionLS;
+        }
+    }
+    free(buf);
+    return v;
+}
+
+inline uint64_t ParseVersionString(const char* s) {
+    unsigned a = 0, b = 0, c = 0, d = 0;
+    if (sscanf_s(s, "%u.%u.%u.%u", &a, &b, &c, &d) != 4) return 0;
+    return ((uint64_t)((a << 16) | b) << 32) | (uint64_t)((c << 16) | d);
+}
+
+inline uint64_t ActiveNvidiaDriverVersion() {
+    HKEY cls = nullptr;
+    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE,
+                      "SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}",
+                      0, KEY_READ, &cls) != ERROR_SUCCESS) return 0;
+    uint64_t result = 0;
+    for (DWORD i = 0; i < 64 && !result; ++i) {
+        char sub[16];
+        snprintf(sub, sizeof(sub), "%04lu", i);
+        HKEY k = nullptr;
+        if (RegOpenKeyExA(cls, sub, 0, KEY_READ, &k) != ERROR_SUCCESS) continue;
+        char provider[128] = {}; DWORD plen = sizeof(provider);
+        char ver[64] = {};      DWORD vlen = sizeof(ver);
+        if (RegQueryValueExA(k, "ProviderName", nullptr, nullptr, (BYTE*)provider, &plen) == ERROR_SUCCESS &&
+            strstr(provider, "NVIDIA") &&
+            RegQueryValueExA(k, "DriverVersion", nullptr, nullptr, (BYTE*)ver, &vlen) == ERROR_SUCCESS) {
+            result = ParseVersionString(ver);
+        }
+        RegCloseKey(k);
+    }
+    RegCloseKey(cls);
+    return result;
+}
+
+inline char g_nvpLoadInfo[512] = {};
+
+inline bool ProxyDirectory(char* dir, size_t len) {
+    HMODULE self = nullptr;
+    GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                       (LPCSTR)&ProxyDirectory, &self);
+    if (!self || !GetModuleFileNameA(self, dir, (DWORD)len)) return false;
+    char* slash = strrchr(dir, '\\');
+    if (!slash) return false;
+    *(slash + 1) = 0;
+    return true;
+}
+
+inline HMODULE LoadPrivateCopy(const char* src, char* infoTail, size_t infoTailLen) {
+    char dir[MAX_PATH] = {};
+    if (ProxyDirectory(dir, sizeof(dir))) {
+        strcat_s(dir, sizeof(dir), "nvp_private");
+        CreateDirectoryA(dir, nullptr);
+        char dst[MAX_PATH]; snprintf(dst, sizeof(dst), "%s\\NvPresent64.dll", dir);
+        WIN32_FILE_ATTRIBUTE_DATA a = {}, b = {};
+        bool same = GetFileAttributesExA(src, GetFileExInfoStandard, &a) && GetFileAttributesExA(dst, GetFileExInfoStandard, &b) &&
+                    a.nFileSizeLow == b.nFileSizeLow && a.nFileSizeHigh == b.nFileSizeHigh &&
+                    CompareFileTime(&a.ftLastWriteTime, &b.ftLastWriteTime) == 0;
+        if (!same) CopyFileA(src, dst, FALSE);
+        HMODULE m = LoadLibraryA(dst);
+        if (m) { snprintf(infoTail, infoTailLen, " [private copy %s]", dst); return m; }
+        snprintf(infoTail, infoTailLen, " [private copy failed err %lu, loading source path]", GetLastError());
+    }
+    return LoadLibraryA(src);
+}
+
 inline HMODULE LoadNvPresent() {
-    HMODULE m = GetModuleHandleA("NvPresent64.dll");
-    if (m) return m;
-    m = LoadLibraryA("NvPresent64.dll");
-    if (m) return m;
+    HMODULE m = nullptr;
+    if (HMODULE pre = GetModuleHandleA("NvPresent64.dll")) {
+        char p[MAX_PATH] = {};
+        GetModuleFileNameA(pre, p, sizeof(p));
+        snprintf(g_nvpLoadInfo, sizeof(g_nvpLoadInfo), "driver instance already present (%s), left untouched; ", p);
+    }
+
+    char cfg[MAX_PATH] = {};
+    if (ProxyDirectory(cfg, sizeof(cfg))) {
+        strcat_s(cfg, sizeof(cfg), "sm86_nvpresent_path.txt");
+        FILE* f = nullptr;
+        if (fopen_s(&f, cfg, "r") == 0 && f) {
+            char line[MAX_PATH] = {};
+            if (fgets(line, sizeof(line), f)) {
+                size_t n = strlen(line);
+                while (n && (line[n-1] == '\n' || line[n-1] == '\r' || line[n-1] == ' ' || line[n-1] == '"')) line[--n] = 0;
+                const char* s = line; while (*s == ' ' || *s == '"') ++s;
+                if (*s) {
+                    char tail[MAX_PATH + 40] = {};
+                    m = LoadPrivateCopy(s, tail, sizeof(tail));
+                    if (m) {
+                        size_t used = strlen(g_nvpLoadInfo);
+                        snprintf(g_nvpLoadInfo + used, sizeof(g_nvpLoadInfo) - used, "override from sm86_nvpresent_path.txt: %s%s", s, tail);
+                        fclose(f);
+                        return m;
+                    }
+                }
+            }
+            fclose(f);
+        }
+    }
+
+    const uint64_t active = ActiveNvidiaDriverVersion();
+    char bestPath[MAX_PATH] = {};
+    uint64_t bestVer = 0;
+    bool bestExact = false;
 
     WIN32_FIND_DATAA fd = {};
     HANDLE hFind = FindFirstFileA("C:\\Windows\\System32\\DriverStore\\FileRepository\\nv_dispi.inf_amd64_*", &fd);
     if (hFind != INVALID_HANDLE_VALUE) {
         do {
-            if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                char fullPath[MAX_PATH];
-                snprintf(fullPath, sizeof(fullPath),
-                         "C:\\Windows\\System32\\DriverStore\\FileRepository\\%s\\NvPresent64.dll", fd.cFileName);
-                m = LoadLibraryA(fullPath);
-                if (m) {
-                    FindClose(hFind);
-                    return m;
-                }
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) continue;
+            char dir[MAX_PATH], nvp[MAX_PATH], kmd[MAX_PATH];
+            snprintf(dir, sizeof(dir), "C:\\Windows\\System32\\DriverStore\\FileRepository\\%s", fd.cFileName);
+            snprintf(nvp, sizeof(nvp), "%s\\NvPresent64.dll", dir);
+            snprintf(kmd, sizeof(kmd), "%s\\nvlddmkm.sys", dir);
+            if (GetFileAttributesA(nvp) == INVALID_FILE_ATTRIBUTES) continue;
+            uint64_t ver = FileVersionOf(kmd);
+            if (!ver) ver = FileVersionOf(nvp);
+            bool exact = (active != 0 && ver == active);
+            if (bestPath[0] == 0 || (exact && !bestExact) || (exact == bestExact && ver > bestVer)) {
+                strncpy_s(bestPath, nvp, _TRUNCATE);
+                bestVer = ver;
+                bestExact = exact;
             }
         } while (FindNextFileA(hFind, &fd));
         FindClose(hFind);
     }
-    return nullptr;
+
+    if (bestPath[0]) {
+        char tail[MAX_PATH + 40] = {};
+        m = LoadPrivateCopy(bestPath, tail, sizeof(tail));
+        if (m) {
+            size_t used = strlen(g_nvpLoadInfo);
+            snprintf(g_nvpLoadInfo + used, sizeof(g_nvpLoadInfo) - used,
+                     "%s%s (package driver %u.%u.%u.%u, active driver %u.%u.%u.%u, %s)", bestPath, tail,
+                     (unsigned)(bestVer >> 48) & 0xFFFF, (unsigned)(bestVer >> 32) & 0xFFFF,
+                     (unsigned)(bestVer >> 16) & 0xFFFF, (unsigned)bestVer & 0xFFFF,
+                     (unsigned)(active >> 48) & 0xFFFF, (unsigned)(active >> 32) & 0xFFFF,
+                     (unsigned)(active >> 16) & 0xFFFF, (unsigned)active & 0xFFFF,
+                     bestExact ? "matches the active driver" : "no exact match, newest package used");
+            return m;
+        }
+    }
+
+    m = LoadLibraryA("NvPresent64.dll");
+    if (m) snprintf(g_nvpLoadInfo, sizeof(g_nvpLoadInfo), "default search order, no DriverStore candidate");
+    return m;
 }
 
 // ---------------------------------------------------------------------------
