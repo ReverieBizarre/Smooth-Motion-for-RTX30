@@ -55,6 +55,7 @@
 #pragma comment(linker, "/export:VerQueryValueA=C:////Windows////System32////version.dll.VerQueryValueA")
 #pragma comment(linker, "/export:VerQueryValueW=C:////Windows////System32////version.dll.VerQueryValueW")
 
+#include "MinHook.h"
 #include "pe_scan.h"
 #include "ui_mask.h"
 #include "osd_overlay.h"
@@ -180,6 +181,118 @@ static int __stdcall hook_cuGraphLaunch(void* gExec, void* stream) {
         PROXY_LOG("[sm86_rehost] cuGraphLaunch #%ld (Ampere FP16 HMMA Tensor Cores Active!)\n", count);
     }
     return g_realGraphLaunch(gExec, stream);
+}
+
+// NvPresent64 from driver 616.92 on no longer imports nvcuda.dll. It fetches
+// the whole driver API table through cuGetProcAddress, so the IAT patch above
+// never sees cuModuleLoadData. We hook nvcuda!cuGetProcAddress and hand back
+// our own entry points for the module loaders and for cuGraphLaunch.
+typedef int (__stdcall *cuGetProcAddress_v1_t)(const char*, void**, int, uint64_t);
+typedef int (__stdcall *cuGetProcAddress_v2_t)(const char*, void**, int, uint64_t, int*);
+typedef int (__stdcall *cuModuleLoadDataEx_t)(void**, const void*, unsigned, void*, void**);
+typedef int (__stdcall *cuLibraryLoadData_t)(void**, const void*, void*, void**, unsigned, void*, void**, unsigned);
+
+static cuGetProcAddress_v1_t g_realGPA1 = nullptr;
+static cuGetProcAddress_v2_t g_realGPA2 = nullptr;
+static void* g_gpaModuleLoadData      = nullptr;
+static void* g_gpaModuleLoadDataEx    = nullptr;
+static void* g_gpaLibraryLoadData     = nullptr;
+static void* g_gpaModuleLoadFatBinary = nullptr;
+static void* g_gpaGraphLaunch         = nullptr;
+static volatile long g_gpaSubstitutions = 0;
+
+static const void* RelabelIfFatbin(const void* image, const char* via) {
+    const uint8_t* p = (const uint8_t*)image;
+    if (!p || *(const uint32_t*)p != FATBIN_MAGIC) return image;
+    size_t len = 0;
+    uint8_t* r = relabel_fatbin(p, &len);
+    if (!r) return image;
+    PROXY_MILESTONE(7, "FATBIN", "Fatbin relabeled for sm_86 via %s: %zu bytes\n", via, len);
+    return r;
+}
+
+static int __stdcall gpa_cuModuleLoadData(void** module, const void* image) {
+    return ((cuModuleLoadData_t)g_gpaModuleLoadData)(module, RelabelIfFatbin(image, "cuModuleLoadData"));
+}
+static int __stdcall gpa_cuModuleLoadDataEx(void** module, const void* image, unsigned n, void* opts, void** vals) {
+    return ((cuModuleLoadDataEx_t)g_gpaModuleLoadDataEx)(module, RelabelIfFatbin(image, "cuModuleLoadDataEx"), n, opts, vals);
+}
+static int __stdcall gpa_cuLibraryLoadData(void** lib, const void* code, void* jo, void** jov, unsigned nj, void* lo, void** lov, unsigned nl) {
+    return ((cuLibraryLoadData_t)g_gpaLibraryLoadData)(lib, RelabelIfFatbin(code, "cuLibraryLoadData"), jo, jov, nj, lo, lov, nl);
+}
+static int __stdcall gpa_cuModuleLoadFatBinary(void** module, const void* fat) {
+    return ((cuModuleLoadData_t)g_gpaModuleLoadFatBinary)(module, RelabelIfFatbin(fat, "cuModuleLoadFatBinary"));
+}
+static int __stdcall gpa_cuGraphLaunch(void* gExec, void* stream) {
+    long count = InterlockedIncrement(&g_graphLaunchCount);
+    if (count <= 10 || count % 60 == 0) {
+        PROXY_LOG("[sm86_rehost] cuGraphLaunch #%ld (Ampere FP16 HMMA Tensor Cores Active!)\n", count);
+    }
+    return ((cuGraphLaunch_t)g_gpaGraphLaunch)(gExec, stream);
+}
+
+static int __stdcall hook_cuGetProcAddress_v1(const char*, void**, int, uint64_t);
+static int __stdcall hook_cuGetProcAddress_v2(const char*, void**, int, uint64_t, int*);
+
+static void* SubstituteCudaProc(const char* symbol, void* real, int cudaVersion) {
+    if (!symbol || !real) return real;
+    void* sub = nullptr;
+    if      (strcmp(symbol, "cuModuleLoadData") == 0)      { g_gpaModuleLoadData = real;      sub = (void*)&gpa_cuModuleLoadData; }
+    else if (strcmp(symbol, "cuModuleLoadDataEx") == 0)    { g_gpaModuleLoadDataEx = real;    sub = (void*)&gpa_cuModuleLoadDataEx; }
+    else if (strcmp(symbol, "cuLibraryLoadData") == 0)     { g_gpaLibraryLoadData = real;     sub = (void*)&gpa_cuLibraryLoadData; }
+    else if (strcmp(symbol, "cuModuleLoadFatBinary") == 0) { g_gpaModuleLoadFatBinary = real; sub = (void*)&gpa_cuModuleLoadFatBinary; }
+    else if (strcmp(symbol, "cuGraphLaunch") == 0)         { g_gpaGraphLaunch = real;         sub = (void*)&gpa_cuGraphLaunch; }
+    else if (strcmp(symbol, "cuGetProcAddress") == 0) {
+        // Stay in the loop if the caller re-fetches the resolver itself.
+        sub = (cudaVersion >= 12000) ? (void*)&hook_cuGetProcAddress_v2 : (void*)&hook_cuGetProcAddress_v1;
+    }
+    if (sub) {
+        InterlockedIncrement(&g_gpaSubstitutions);
+        PROXY_LOG("[sm86_rehost] cuGetProcAddress(\"%s\") -> %p, substituted with %p\n", symbol, real, sub);
+        return sub;
+    }
+    return real;
+}
+
+static int __stdcall hook_cuGetProcAddress_v1(const char* symbol, void** pfn, int cudaVersion, uint64_t flags) {
+    int rc = g_realGPA1(symbol, pfn, cudaVersion, flags);
+    if (rc == 0 && pfn && *pfn) *pfn = SubstituteCudaProc(symbol, *pfn, cudaVersion);
+    return rc;
+}
+static int __stdcall hook_cuGetProcAddress_v2(const char* symbol, void** pfn, int cudaVersion, uint64_t flags, int* status) {
+    int rc = g_realGPA2(symbol, pfn, cudaVersion, flags, status);
+    if (rc == 0 && pfn && *pfn) *pfn = SubstituteCudaProc(symbol, *pfn, cudaVersion);
+    return rc;
+}
+
+// Must run before NvPresent64.dll is loaded. A table it fills with real
+// pointers during its own initialization is invisible to us afterwards.
+static bool InstallCudaGpaHooks() {
+    MH_STATUS st = MH_Initialize();
+    if (st != MH_OK && st != MH_ERROR_ALREADY_INITIALIZED) {
+        PROXY_LOG("[sm86_rehost] ERROR: MH_Initialize failed: %s\n", MH_StatusToString(st));
+        return false;
+    }
+    HMODULE nvcuda = LoadLibraryA("nvcuda.dll");
+    if (!nvcuda) {
+        PROXY_LOG("[sm86_rehost] ERROR: nvcuda.dll could not be loaded (err %lu)\n", GetLastError());
+        return false;
+    }
+    void* gpa1 = (void*)GetProcAddress(nvcuda, "cuGetProcAddress");
+    void* gpa2 = (void*)GetProcAddress(nvcuda, "cuGetProcAddress_v2");
+    int installed = 0;
+    if (gpa2) {
+        st = MH_CreateHook(gpa2, (void*)&hook_cuGetProcAddress_v2, (void**)&g_realGPA2);
+        if (st == MH_OK && MH_EnableHook(gpa2) == MH_OK) ++installed;
+        else PROXY_LOG("[sm86_rehost] ERROR: hooking cuGetProcAddress_v2 failed: %s\n", MH_StatusToString(st));
+    }
+    if (gpa1 && gpa1 != gpa2) {
+        st = MH_CreateHook(gpa1, (void*)&hook_cuGetProcAddress_v1, (void**)&g_realGPA1);
+        if (st == MH_OK && MH_EnableHook(gpa1) == MH_OK) ++installed;
+        else PROXY_LOG("[sm86_rehost] ERROR: hooking cuGetProcAddress failed: %s\n", MH_StatusToString(st));
+    }
+    PROXY_LOG("[sm86_rehost] cuGetProcAddress hooks installed: %d\n", installed);
+    return installed > 0;
 }
 
 typedef bool (*pfnInitD3D)(void);
@@ -418,6 +531,11 @@ static void EnsureOverlay(IDXGISwapChain* swap) {
 
 static void ProcessOverlayAndUiMask(IDXGISwapChain* swap) {
     if (!swap) return;
+    // Off unless SM86_OSD=1. The overlay is drawn on real frames only, so it
+    // blinks against the generated ones, and its text does not render in games.
+    static int s_osd = -1;
+    if (s_osd < 0) { const char* e = getenv("SM86_OSD"); s_osd = (e && atoi(e)) ? 1 : 0; }
+    if (!s_osd) return;
     if (g_startupEvent) {
         WaitForSingleObject(g_startupEvent, 2000);
     }
@@ -632,6 +750,40 @@ static HRESULT STDMETHODCALLTYPE HookedPresent1(IDXGISwapChain1* swap, UINT sync
     return hr;
 }
 
+static const char* ModuleNameOf(void* addr, char* buf, size_t bufLen) {
+    HMODULE mod = nullptr;
+    if (!GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                            (LPCSTR)addr, &mod) || !mod) {
+        return "?";
+    }
+    char full[MAX_PATH] = {};
+    GetModuleFileNameA(mod, full, sizeof(full));
+    const char* base = strrchr(full, '\\');
+    base = base ? base + 1 : full;
+    strncpy_s(buf, bufLen, base, _TRUNCATE);
+    return buf;
+}
+
+static bool InstallInlineHook(const char* name, void* target, void* detour, void** orig) {
+    if (!target) {
+        PROXY_LOG("[sm86_rehost] ERROR: %s: null target\n", name);
+        return false;
+    }
+    char modName[MAX_PATH] = {};
+    ModuleNameOf(target, modName, sizeof(modName));
+    if (_stricmp(modName, "dxgi.dll") != 0) {
+        // Another vtable hooker got there first. Hooking its function still
+        // works, the chain just gets one link longer.
+        PROXY_LOG("[sm86_rehost] %s slot points into %s, hooking that\n", name, modName);
+    }
+    MH_STATUS st = MH_CreateHook(target, detour, orig);
+    if (st != MH_OK) {
+        PROXY_LOG("[sm86_rehost] ERROR: MH_CreateHook(%s @ %p in %s) failed: %s\n", name, target, modName, MH_StatusToString(st));
+        return false;
+    }
+    return true;
+}
+
 static void InstallDxgiHooks() {
     WNDCLASSA wc = {};
     wc.lpfnWndProc = DefWindowProcA;
@@ -682,47 +834,33 @@ static void InstallDxgiHooks() {
         IDXGISwapChain1* sc1 = nullptr;
         if (SUCCEEDED(sc->QueryInterface(IID_PPV_ARGS(&sc1)))) {
             void** vt = *(void***)sc1;
-            DWORD oldProt = 0;
 
-            // Slot 8: Present
-            if (vt[8] != (void*)&HookedPresent) {
-                VirtualProtect(&vt[8], sizeof(void*), PAGE_EXECUTE_READWRITE, &oldProt);
-                g_origPresent = (Present_t)vt[8];
-                vt[8] = (void*)&HookedPresent;
-                VirtualProtect(&vt[8], sizeof(void*), oldProt, &oldProt);
-            }
+            // Inline hooks on the real DXGI functions instead of vtable swaps.
+            // The Steam overlay swaps the same vtable slots. When it captured
+            // our slot as its original while we had captured its, the two hooks
+            // called each other until the stack overflowed (issue #1). A
+            // MinHook trampoline always continues into the real function body.
+            MH_STATUS mhInit = MH_Initialize();
+            if (mhInit != MH_OK && mhInit != MH_ERROR_ALREADY_INITIALIZED) {
+                PROXY_LOG("[sm86_rehost] ERROR: MH_Initialize failed: %s\n", MH_StatusToString(mhInit));
+            } else {
+                InstallInlineHook("Present",       vt[8],  (void*)&HookedPresent,       (void**)&g_origPresent);
+                InstallInlineHook("ResizeBuffers", vt[13], (void*)&HookedResizeBuffers, (void**)&g_origResizeBuffers);
+                InstallInlineHook("Present1",      vt[22], (void*)&HookedPresent1,      (void**)&g_origPresent1);
 
-            // Slot 13: ResizeBuffers (R4)
-            if (vt[13] != (void*)&HookedResizeBuffers) {
-                VirtualProtect(&vt[13], sizeof(void*), PAGE_EXECUTE_READWRITE, &oldProt);
-                g_origResizeBuffers = (ResizeBuffers_t)vt[13];
-                vt[13] = (void*)&HookedResizeBuffers;
-                VirtualProtect(&vt[13], sizeof(void*), oldProt, &oldProt);
-            }
-
-            // Slot 22: Present1
-            if (vt[22] != (void*)&HookedPresent1) {
-                VirtualProtect(&vt[22], sizeof(void*), PAGE_EXECUTE_READWRITE, &oldProt);
-                g_origPresent1 = (Present1_t)vt[22];
-                vt[22] = (void*)&HookedPresent1;
-                VirtualProtect(&vt[22], sizeof(void*), oldProt, &oldProt);
-            }
-
-            PROXY_MILESTONE(9, "DXGI_HOOK", "DXGI Present hooks installed: Present(slot 8)=%p, Present1(slot 22)=%p\n", (void*)g_origPresent, (void*)g_origPresent1);
-            PROXY_MILESTONE(10, "DXGI_HOOK", "DXGI ResizeBuffers hook installed (slot 13)=%p\n", (void*)g_origResizeBuffers);
-
-            // Slot 39: ResizeBuffers1 on IDXGISwapChain3 (R4)
-            IDXGISwapChain3* sc3 = nullptr;
-            if (SUCCEEDED(sc->QueryInterface(IID_PPV_ARGS(&sc3)))) {
-                void** vt3 = *(void***)sc3;
-                if (vt3[39] != (void*)&HookedResizeBuffers1) {
-                    VirtualProtect(&vt3[39], sizeof(void*), PAGE_EXECUTE_READWRITE, &oldProt);
-                    g_origResizeBuffers1 = (ResizeBuffers1_t)vt3[39];
-                    vt3[39] = (void*)&HookedResizeBuffers1;
-                    VirtualProtect(&vt3[39], sizeof(void*), oldProt, &oldProt);
-                    PROXY_LOG("[sm86_rehost] DXGI ResizeBuffers1 hook installed (slot 39)=%p\n", (void*)g_origResizeBuffers1);
+                IDXGISwapChain3* sc3 = nullptr;
+                if (SUCCEEDED(sc->QueryInterface(IID_PPV_ARGS(&sc3)))) {
+                    void** vt3 = *(void***)sc3;
+                    InstallInlineHook("ResizeBuffers1", vt3[39], (void*)&HookedResizeBuffers1, (void**)&g_origResizeBuffers1);
+                    sc3->Release();
                 }
-                sc3->Release();
+
+                MH_STATUS mhEn = MH_EnableHook(MH_ALL_HOOKS);
+                if (mhEn != MH_OK) {
+                    PROXY_LOG("[sm86_rehost] ERROR: MH_EnableHook failed: %s\n", MH_StatusToString(mhEn));
+                }
+                PROXY_MILESTONE(9, "DXGI_HOOK", "DXGI Present inline hooks installed: Present=%p, Present1=%p (trampolines)\n", (void*)g_origPresent, (void*)g_origPresent1);
+                PROXY_MILESTONE(10, "DXGI_HOOK", "DXGI ResizeBuffers inline hooks installed: ResizeBuffers=%p, ResizeBuffers1=%p (trampolines)\n", (void*)g_origResizeBuffers, (void*)g_origResizeBuffers1);
             }
 
             sc1->Release();
@@ -775,37 +913,33 @@ static bool ApplyRehost(HMODULE nv) {
     }
     PROXY_MILESTONE(5, "GATE_PATCH", "Dual-gate patch applied: Tier 2 allowed (0x02), sil=1 forced (len=%u)\n", setgeLen);
 
-    // 2. Dynamic IAT Hook for cuModuleLoadData (PE Import Directory Walker)
-    void** iat_load = sm86::FindIATEntry(nv, "nvcuda.dll", "cuModuleLoadData");
-    if (iat_load) {
-        PROXY_LOG("[sm86_rehost] IAT cuModuleLoadData found dynamically @ %p (RVA +0x%lx)\n",
-               iat_load, (uint32_t)((uint8_t*)iat_load - (uint8_t*)nv));
-    } else {
-        PROXY_LOG("[sm86_rehost] WARNING: Dynamic IAT walk failed! Trying fallback RVA 0x1d2820...\n");
-        iat_load = (void**)((uint8_t*)nv + 0x1d2820);
-    }
-
+    // 2. IAT hooks for builds that import nvcuda.dll statically (616.64 and
+    //    older). Newer builds have no such import and are covered by the
+    //    cuGetProcAddress hooks. The old fallback wrote a pointer to a
+    //    hardcoded RVA when the import was missing, which corrupts any other
+    //    build, so there is no fallback anymore.
     DWORD oldProt = 0;
-    if (VirtualProtect(iat_load, sizeof(void*), PAGE_READWRITE, &oldProt)) {
+    void** iat_load = sm86::FindIATEntry(nv, "nvcuda.dll", "cuModuleLoadData");
+    if (iat_load && VirtualProtect(iat_load, sizeof(void*), PAGE_READWRITE, &oldProt)) {
         g_realModuleLoadData = (cuModuleLoadData_t)*iat_load;
         *iat_load = (void*)&hook_cuModuleLoadData;
         VirtualProtect(iat_load, sizeof(void*), oldProt, &oldProt);
         PROXY_LOG("[sm86_rehost] IAT cuModuleLoadData hooked (original @ %p)\n", g_realModuleLoadData);
-    } else {
-        PROXY_LOG("[sm86_rehost] FAILED to hook IAT cuModuleLoadData\n");
-        return false;
     }
 
     void** iat_graph = sm86::FindIATEntry(nv, "nvcuda.dll", "cuGraphLaunch");
-    if (!iat_graph) iat_graph = (void**)((uint8_t*)nv + 0x1d2780);
     if (iat_graph && VirtualProtect(iat_graph, sizeof(void*), PAGE_READWRITE, &oldProt)) {
         g_realGraphLaunch = (cuGraphLaunch_t)*iat_graph;
         *iat_graph = (void*)&hook_cuGraphLaunch;
         VirtualProtect(iat_graph, sizeof(void*), oldProt, &oldProt);
         PROXY_LOG("[sm86_rehost] IAT cuGraphLaunch hooked (original @ %p)\n", g_realGraphLaunch);
     }
-    PROXY_MILESTONE(6, "IAT_HOOK", "Dynamic IAT hooks installed: cuModuleLoadData=%p (orig=%p), cuGraphLaunch=%p (orig=%p)\n",
-                    (void*)hook_cuModuleLoadData, (void*)g_realModuleLoadData, (void*)hook_cuGraphLaunch, (void*)g_realGraphLaunch);
+    if (!iat_load && !g_realGPA1 && !g_realGPA2) {
+        PROXY_LOG("[sm86_rehost] ERROR: no way to intercept the CUDA module loader, fatbins will not be relabeled\n");
+        return false;
+    }
+    PROXY_MILESTONE(6, "IAT_HOOK", "CUDA loader interception: IAT cuModuleLoadData=%s, cuGetProcAddress hooks=%s\n",
+                    iat_load ? "patched" : "absent", (g_realGPA1 || g_realGPA2) ? "active" : "none");
 
     // 3. Dynamic Global Config Struct Resolution (RIP-Relative Dissection)
     uint8_t* S = sm86::ResolveConfigStructFromInit(nv);
@@ -835,8 +969,9 @@ static DWORD WINAPI StartupThread(LPVOID) {
     GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCSTR)StartupThread, &hSelf);
 
     PROXY_MILESTONE(3, "STARTUP", "StartupThread worker thread started (TID=%lu)\n", GetCurrentThreadId());
+    InstallCudaGpaHooks();
     g_nvpresent = sm86::LoadNvPresent();
-    PROXY_MILESTONE(4, "NVP_LOAD", "LoadNvPresent resolved module base: %p\n", g_nvpresent);
+    PROXY_MILESTONE(4, "NVP_LOAD", "LoadNvPresent resolved module base: %p [%s]\n", g_nvpresent, sm86::g_nvpLoadInfo);
 
     if (g_nvpresent) {
         bool ok = ApplyRehost(g_nvpresent);
@@ -922,6 +1057,50 @@ static void InstallGetModuleFileNameHook() {
     }
 }
 
+// The game must not create its DXGI factory or D3D12 device before NvPresent's
+// CreateSwapChain detours exist, otherwise its swapchain is never wrapped and
+// the proxy sits in passthrough. UE5 creates both within the first second, so
+// the first call waits for the startup thread (bounded).
+static void WaitForProxyStartup(const char* who) {
+    if (!g_startupEvent) return;
+    if (WaitForSingleObject(g_startupEvent, 0) == WAIT_OBJECT_0) return;
+    DWORD t0 = GetTickCount();
+    DWORD r = WaitForSingleObject(g_startupEvent, 12000);
+    PROXY_LOG("[sm86_rehost] %s waited %lu ms for proxy startup (%s)\n", who, GetTickCount() - t0, r == WAIT_OBJECT_0 ? "ready" : "timeout, continuing");
+}
+typedef HRESULT (WINAPI *CreateDXGIFactory2_t)(UINT, REFIID, void**);
+typedef HRESULT (WINAPI *CreateDXGIFactory1_t)(REFIID, void**);
+typedef HRESULT (WINAPI *D3D12CreateDevice_t)(IUnknown*, D3D_FEATURE_LEVEL, REFIID, void**);
+static CreateDXGIFactory2_t g_origCreateDXGIFactory2 = nullptr;
+static CreateDXGIFactory1_t g_origCreateDXGIFactory1 = nullptr;
+static CreateDXGIFactory1_t g_origCreateDXGIFactory  = nullptr;
+static D3D12CreateDevice_t  g_origD3D12CreateDevice  = nullptr;
+static HRESULT WINAPI HookedCreateDXGIFactory2(UINT f, REFIID r, void** pp) { WaitForProxyStartup("CreateDXGIFactory2"); return g_origCreateDXGIFactory2(f, r, pp); }
+static HRESULT WINAPI HookedCreateDXGIFactory1(REFIID r, void** pp) { WaitForProxyStartup("CreateDXGIFactory1"); return g_origCreateDXGIFactory1(r, pp); }
+static HRESULT WINAPI HookedCreateDXGIFactory(REFIID r, void** pp) { WaitForProxyStartup("CreateDXGIFactory"); return g_origCreateDXGIFactory(r, pp); }
+static HRESULT WINAPI HookedD3D12CreateDevice(IUnknown* a, D3D_FEATURE_LEVEL fl, REFIID r, void** pp) { WaitForProxyStartup("D3D12CreateDevice"); return g_origD3D12CreateDevice(a, fl, r, pp); }
+
+static void InstallStartupOrderingHooks() {
+    HMODULE hExe = GetModuleHandleW(nullptr);
+    if (!hExe) return;
+    struct { const char* dll; const char* fn; void* hook; void** orig; } hooks[] = {
+        { "dxgi.dll", "CreateDXGIFactory2", (void*)&HookedCreateDXGIFactory2, (void**)&g_origCreateDXGIFactory2 },
+        { "dxgi.dll", "CreateDXGIFactory1", (void*)&HookedCreateDXGIFactory1, (void**)&g_origCreateDXGIFactory1 },
+        { "dxgi.dll", "CreateDXGIFactory",  (void*)&HookedCreateDXGIFactory,  (void**)&g_origCreateDXGIFactory  },
+        { "d3d12.dll", "D3D12CreateDevice", (void*)&HookedD3D12CreateDevice,  (void**)&g_origD3D12CreateDevice  },
+    };
+    for (auto& h : hooks) {
+        void** iat = sm86::FindIATEntry(hExe, h.dll, h.fn);
+        if (!iat) continue;
+        DWORD oldProt = 0;
+        if (VirtualProtect(iat, sizeof(void*), PAGE_READWRITE, &oldProt)) {
+            *h.orig = *iat; *iat = h.hook;
+            VirtualProtect(iat, sizeof(void*), oldProt, &oldProt);
+            PROXY_LOG("[sm86_rehost] Startup-ordering IAT hook: %s!%s\n", h.dll, h.fn);
+        }
+    }
+}
+
 static LONG WINAPI CrashFilter(EXCEPTION_POINTERS* ep) {
     HMODULE mod = nullptr;
     GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -954,6 +1133,7 @@ BOOL WINAPI DllMain(HINSTANCE h, DWORD reason, LPVOID lpReserved) {
         InstallGetModuleFileNameHook();
         InitializeCriticalSection(&g_cs);
         g_startupEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
+        InstallStartupOrderingHooks();
         HANDLE thread = CreateThread(nullptr, 0, StartupThread, nullptr, 0, nullptr);
         if (thread) CloseHandle(thread);
     } else if (reason == DLL_PROCESS_DETACH) {
